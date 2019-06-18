@@ -1,0 +1,28 @@
+package me.jadc.jadbreaks.items;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
+
+import me.jadc.jadbreaks.jb;
+import me.jadc.jadbreaks.objects.CustomItem;
+
+public class Test extends CustomItem implements Listener {
+
+	public Test() {
+		super(Material.BONE, "Boner");
+		jb.instance.getServer().getPluginManager().registerEvents(this, jb.instance);
+	}
+	
+	@EventHandler
+	public void onMove(PlayerMoveEvent e) {
+		Bukkit.broadcastMessage("a");
+		if(isSelf(e.getPlayer().getInventory().getItemInMainHand())) {
+			e.getPlayer().sendMessage(getName());
+		}else {
+			e.getPlayer().getInventory().addItem(getItem());
+		}
+	}
+}

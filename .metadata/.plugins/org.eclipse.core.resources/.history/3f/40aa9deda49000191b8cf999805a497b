@@ -1,0 +1,19 @@
+package me.jadc.jadbreaks.tools;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ShapelessRecipe;
+
+import me.jadc.jadbreaks.jb;
+import me.jadc.jadbreaks.items.Jetpack;
+
+public class Recipe {
+	public void registerShapeless() {
+		ShapelessRecipe jetpackRecipe = new ShapelessRecipe(new NamespacedKey(jb.instance, new ), new Jetpack());
+		jetpackRecipe.addIngredient(Material.IRON_CHESTPLATE);
+		jetpackRecipe.addIngredient(Material.TNT);
+		jetpackRecipe.addIngredient(Material.TNT);
+		Bukkit.addRecipe(jetpackRecipe);
+	}
+}

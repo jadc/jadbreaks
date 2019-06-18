@@ -1,0 +1,31 @@
+package me.jadc.jadbreaks.cmd;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import me.jadc.jadbreaks.tools.Message;
+
+public class Jihad implements CommandExecutor {
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		
+		if(cmd.getName().equalsIgnoreCase("jihad")) {
+			if(sender instanceof Player) {
+				Player p = (Player) sender;
+				
+				p.getWorld().createExplosion(p.getLocation(), 0.0F);
+				p.setHealth(0.0D);
+				
+			}else {
+				Message.error(sender, "Ingame players only");
+			}
+			return true;
+		}
+		
+		return true;
+	}
+	
+}

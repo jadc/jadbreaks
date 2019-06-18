@@ -1,0 +1,12 @@
+package me.jadc.jadbreaks.items;
+
+import org.bukkit.Material;
+
+import me.jadc.jadbreaks.objects.Item;
+
+public class Test extends Item {
+
+	public Test() {
+		super(Material.BONE, "Boner");
+	}
+}

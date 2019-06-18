@@ -1,0 +1,35 @@
+package me.jadc.jadbreaks.objects;
+
+import org.bukkit.Material;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import me.jadc.jadbreaks.jb;
+import net.md_5.bungee.api.ChatColor;
+
+public class CustomItem extends ItemStack implements Listener {
+	
+	ItemStack item;
+	
+	public CustomItem(Material mat, String name) {
+		super(mat);
+		this.item = new ItemStack(mat);
+		
+		ItemMeta tempMeta = getItemMeta();
+		tempMeta.setDisplayName(ChatColor.RESET + name);
+		item.setItemMeta(tempMeta);
+		
+		jb.instance.getServer().getPluginManager().registerEvents(this, jb.instance);
+	}
+	
+	public boolean isSelf(ItemStack foreign) {
+		if(foreign == null) return false;
+		if(!foreign.hasItemMeta()) return false;
+		if(foreign.getItemMeta() == null) return false;
+		if(!foreign.getItemMeta().hasDisplayName()) return false;
+		if(foreign.getItemMeta().getDisplayName() == null) return false;
+		if(!foreign.getItemMeta().getDisplayName().equals(getItemMeta().getDisplayName())) return false;
+		return true;
+	}
+}

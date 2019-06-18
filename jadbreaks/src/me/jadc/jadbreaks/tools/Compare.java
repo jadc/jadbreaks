@@ -1,0 +1,27 @@
+package me.jadc.jadbreaks.tools;
+
+import java.util.List;
+
+import org.bukkit.inventory.ItemStack;
+
+public class Compare {
+	public static boolean compareName(ItemStack foreign, String name) {
+		if(foreign == null) return false;
+		if(!foreign.hasItemMeta()) return false;
+		if(foreign.getItemMeta() == null) return false;
+		if(!foreign.getItemMeta().hasDisplayName()) return false;
+		if(foreign.getItemMeta().getDisplayName() == null) return false;
+		if(!foreign.getItemMeta().getDisplayName().equals(name)) return false;
+		return true;
+	}
+	
+	public static boolean compareLore(ItemStack foreign, List<String> lore) {
+		if(foreign == null) return false;
+		if(!foreign.hasItemMeta()) return false;
+		if(foreign.getItemMeta() == null) return false;
+		if(!foreign.getItemMeta().hasLore()) return false;
+		if(foreign.getItemMeta().getLore() == null) return false;
+		if(!foreign.getItemMeta().getLore().equals(lore)) return false;
+		return true;
+	}
+}

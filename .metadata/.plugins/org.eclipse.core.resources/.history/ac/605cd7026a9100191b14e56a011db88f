@@ -1,0 +1,14 @@
+package me.jadc.jadbreaks.objects;
+
+public class Warp {
+	
+	String name;
+	int x,y,z;
+	
+	public Warp(String name, int x, int y, int z) {
+		this.name = name;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+}

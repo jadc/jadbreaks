@@ -1,0 +1,39 @@
+package me.jadc.jadbreaks.cmd;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+
+import me.jadc.jadbreaks.tools.Message;
+
+public class Duel implements CommandExecutor, Listener {
+	
+	// Puts two players into a state where they can deal damage to each other
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		
+		if(cmd.getName().equalsIgnoreCase("duel")){
+			if(sender instanceof Player) {
+				Player p = (Player) sender;
+
+				p.sendMessage("Command executed");
+				
+			}else {
+				Message.error(sender, "Ingame players only");
+			}
+			return true;
+		}
+		
+		return true;
+	}
+	
+	// Behaviour when not in a duel: Only knockback, no damage
+	@EventHandler
+	public void onHit(EntityDamageByEntityEvent e) {
+		if(e.getDamager() instanceof Player && e.getEntity() instanceof Player) e.setDamage(0.0D);
+	}
+}

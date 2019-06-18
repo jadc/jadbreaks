@@ -1,0 +1,34 @@
+package me.jadc.jadbreaks.addons;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+
+import me.jadc.jadbreaks.jb;
+import me.jadc.jadbreaks.tools.Conf;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+
+public class ChangelogNotification implements Listener {
+	
+	//String version = jb.instance.getDescription().getVersion();
+	String version = "1.0.0";
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		if(Conf.instance().getString(Conf.playerData(e.getPlayer(), "version")) != version) {
+			// Havent seen new changelog
+			Conf.instance().set(Conf.playerData(e.getPlayer(), "version"), version);
+			Conf.update();
+			
+			e.getPlayer().sendMessage("");
+			e.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + " The server has recieved a new patch!");
+			e.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + " To see what is new in version " + version + ", click below.");
+			TextComponent message = new TextComponent(ChatColor.AQUA + "  " + ChatColor.UNDERLINE + jb.instance.getDescription().getName() + " Patch " + version + " Changelog");
+			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "http://spigotmc.org/" + version));
+			e.getPlayer().spigot().sendMessage(message);
+			e.getPlayer().sendMessage("");
+		}
+	}
+}
