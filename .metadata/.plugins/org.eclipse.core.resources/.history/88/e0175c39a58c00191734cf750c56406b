@@ -1,0 +1,24 @@
+package me.jadc.jadbreaks.items;
+
+import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerMoveEvent;
+
+import me.jadc.jadbreaks.objects.Item;
+
+public class Test extends Item {
+
+	public Test() {
+		super(Material.BONE, "Boner");
+		registerEvents();
+	}
+	
+	@EventHandler
+	public void onMove(PlayerMoveEvent e) {
+		if(isSelf(e.getPlayer().getInventory().getItemInMainHand())) {
+			e.getPlayer().sendMessage(getName());
+		}else {
+			e.getPlayer().getInventory().addItem(getItem());
+		}
+	}
+}

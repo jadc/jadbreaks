@@ -1,0 +1,57 @@
+package me.jadc.jadbreaks.objects;
+
+import java.util.List;
+
+import org.bukkit.Material;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import me.jadc.jadbreaks.jb;
+import net.md_5.bungee.api.ChatColor;
+
+public class CustomItem extends ItemStack implements Listener {
+	
+	ItemStack item;
+	
+	public CustomItem(Material mat, String name) {
+		super(mat);
+		this.item = new ItemStack(mat);
+		setName(name);
+		jb.instance.getServer().getPluginManager().registerEvents(this, jb.instance);
+	}
+	
+	public ItemStack getItem() {
+		return item;
+	}
+	
+	public ItemMeta getMeta() {
+		return item.getItemMeta();
+	}
+	
+	public void setMeta(ItemMeta m) {
+		item.setItemMeta(m);
+	}
+	
+	public void setName(String s) {
+		ItemMeta tempMeta = item.getItemMeta();
+		tempMeta.setDisplayName(ChatColor.RESET + s);
+		item.setItemMeta(tempMeta);
+	}
+	
+	public void setLore(List<String> l) {
+		ItemMeta tempMeta = item.getItemMeta();
+		tempMeta.setLore(l);
+		item.setItemMeta(tempMeta);
+	}
+	
+	public boolean isSelf(ItemStack foreign) {
+		if(foreign == null) return false;
+		if(!foreign.hasItemMeta()) return false;
+		if(foreign.getItemMeta() == null) return false;
+		if(!foreign.getItemMeta().hasDisplayName()) return false;
+		if(foreign.getItemMeta().getDisplayName() == null) return false;
+		if(!foreign.getItemMeta().getDisplayName().equals(getName())) return false;
+		return true;
+	}
+}

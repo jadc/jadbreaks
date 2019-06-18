@@ -1,0 +1,23 @@
+features:
+  addons:
+    boxOfBlocks: 
+      enabled: false
+      blacklist: 
+    deathSave: 
+      keepInv: false
+      keepHealth: true
+      keepHunger: true
+      keepExp: true
+    chatPing: true
+    instaSleep: true
+    xpDropAlways: true
+  items:
+    jetpack: false
+      flyTickPerCoal: 40
+      flySpeed: 10
+    theBoof: false
+    pStone: false
+  autoRestart:
+    enabled: true
+    hourInterval: 4
+players:

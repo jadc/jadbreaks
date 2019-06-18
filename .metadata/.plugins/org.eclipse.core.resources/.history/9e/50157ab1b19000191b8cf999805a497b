@@ -1,0 +1,161 @@
+package me.jadc.jadbreaks.items;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import me.jadc.jadbreaks.jb;
+import me.jadc.jadbreaks.objects.CustomItem;
+import me.jadc.jadbreaks.tools.Conf;
+import me.jadc.jadbreaks.tools.Effects;
+import me.jadc.jadbreaks.tools.Message;
+
+public class Jetpack extends CustomItem implements Listener {
+	
+	private DecimalFormat decFormat = new DecimalFormat("0.0");	
+	private List<String> lore = new ArrayList<String>();
+	private int flyTickPerCoal = (int) Conf.instance().get("items.jetpack.flyTickPerCoal");
+	private int flySpeed = Conf.instance().getInt("items.jetpack.flySpeed");
+	
+	public Jetpack() {
+		super(Material.IRON_CHESTPLATE, "Jetpack");
+		
+		// Item Meta
+		ItemMeta meta = this.getItemMeta();
+		
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		meta.addEnchant(Enchantment.LOYALTY, 1, true);
+		
+		lore.add(loreFormat(0));
+		meta.setLore(lore);
+		
+		setItemMeta(meta);
+	}
+	
+	public void registerRecipe() {
+		ShapelessRecipe jetpackRecipe = new ShapelessRecipe(new NamespacedKey(jb.instance, "Jetpack"), new Jetpack());
+		jetpackRecipe.addIngredient(Material.IRON_CHESTPLATE);
+		jetpackRecipe.addIngredient(Material.TNT);
+		jetpackRecipe.addIngredient(Material.TNT);
+		Bukkit.addRecipe(jetpackRecipe);
+	}
+	
+	public String fuelDisplay(int fuel) {
+		double num = ((double)fuel - 1) / flyTickPerCoal;
+		if(num < 0) num = 0;
+		return decFormat.format(num);
+	}
+	
+	public String loreFormat(int fuel) {
+		return ChatColor.GRAY + "Fueled with " + fuelDisplay(fuel) + " coal";
+	}
+	
+	public int getFuel(ItemStack i) {
+		return i.getEnchantmentLevel(Enchantment.LOYALTY);
+	}
+	
+	/// EVENTS ///
+	
+	// Func related to jetpack flight
+	@EventHandler
+	public void onMove(PlayerMoveEvent e) {
+		Bukkit.getLogger().log(Level.INFO, "" + flyTickPerCoal);
+		Player p = e.getPlayer();
+		if(isSelf(p.getInventory().getChestplate()) && (p.getGameMode() != GameMode.CREATIVE || p.getGameMode() != GameMode.SPECTATOR)) {
+			ItemStack playerJetpack = p.getInventory().getChestplate();
+    		ItemMeta meta = playerJetpack.getItemMeta();
+    		List<String> lore = meta.getLore();
+    		
+			if(p.isSneaking() && !(p.isSwimming()) && !(p.isOnGround()) && p.getLocation().getY() < 300) {
+	    		if(getFuel(playerJetpack) <= 1 || getFuel(playerJetpack) > 10000) return;
+	    		
+	    		meta.removeEnchant(Enchantment.LOYALTY);
+	    		meta.addEnchant(Enchantment.LOYALTY, getFuel(playerJetpack) - 1, true);
+	    		lore.set(0, loreFormat(getFuel(playerJetpack) - 1));
+	    		meta.setLore(lore);
+	    		playerJetpack.setItemMeta(meta);
+	    		
+	    		// Status
+	    		Message.bar(p, fuelDisplay(getFuel(playerJetpack)) + " coal of fuel");
+	    		
+	    		// Physics
+	    		p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 5, flySpeed, true));
+	    		
+	    		//Effects
+	    		Effects.playSound(p.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.25F, 2F);
+	    		Effects.emitParticle(p.getLocation(), Particle.CLOUD, 0, 
+	    				ThreadLocalRandom.current().nextDouble(-0.15, 0.15), 
+	    				0, 
+	    				ThreadLocalRandom.current().nextDouble(-0.15, 0.15)
+	    		);
+	    		Effects.emitParticle(p.getLocation(), Particle.SMOKE_LARGE, 0, 
+	    				ThreadLocalRandom.current().nextDouble(-0.15, 0.15), 
+	    				0, 
+	    				ThreadLocalRandom.current().nextDouble(-0.15, 0.15)
+	    		);
+	    	}else {
+	    		// Removes fall damage
+	    		if(getFuel(playerJetpack) > 1) {
+	    			if(!(p.isOnGround())) {
+	    				p.setFallDistance(0F);
+	    			}
+	    		}
+	    	}
+		}
+    	
+	}
+	
+	// Func related to refueling
+	@EventHandler
+	public void onInteract(PlayerInteractEvent e) {
+		if(e.getAction() != Action.RIGHT_CLICK_AIR) return;
+		if(e.getItem().getType() != Material.COAL) return;
+		
+		if(isSelf(e.getPlayer().getInventory().getChestplate())) {
+			// Lore change
+			ItemStack playerJetpack = e.getPlayer().getInventory().getChestplate();
+			ItemMeta meta = playerJetpack.getItemMeta();
+			List<String> lore = meta.getLore();
+			meta.removeEnchant(Enchantment.LOYALTY);
+			meta.addEnchant(Enchantment.LOYALTY, getFuel(playerJetpack) + flyTickPerCoal, true);
+			lore.set(0, loreFormat(getFuel(playerJetpack) + flyTickPerCoal));
+    		meta.setLore(lore);
+			playerJetpack.setItemMeta(meta);
+			
+			// Consumption
+			if(e.getItem().getAmount() > 1) {
+				e.getItem().setAmount(e.getItem().getAmount() - 1);
+			}else {
+				e.getItem().setAmount(0);
+			}
+			
+			// Effects/Status
+			Message.bar(e.getPlayer(), ChatColor.GREEN + "+1" + ChatColor.RESET + " " + fuelDisplay(getFuel(playerJetpack)) + " coal");
+			Effects.playSound(e.getPlayer().getLocation(), Sound.ENTITY_PLAYER_BURP, 0.5F, 1.0F);
+		}
+	}
+}

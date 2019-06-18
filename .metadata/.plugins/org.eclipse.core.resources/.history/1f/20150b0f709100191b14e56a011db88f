@@ -1,0 +1,60 @@
+package me.jadc.jadbreaks.cmd;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import me.jadc.jadbreaks.tools.Conf;
+import me.jadc.jadbreaks.tools.Effects;
+import me.jadc.jadbreaks.tools.Message;
+import net.md_5.bungee.api.ChatColor;
+
+public class Warper implements CommandExecutor {
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		
+		if(!(sender instanceof Player)) return true;
+		
+		Player p = (Player) sender;
+		
+		if(args.length <= 1 || args.length > 2) {
+			Message.invalidArgs(p, "/warp " + ChatColor.UNDERLINE + "<set/to> <name>");
+			return true;
+		}
+		if(args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("to")) {
+			boolean isSetting = (args[0].equalsIgnoreCase("set") ? true : false);
+			
+			// Place name
+			String name = args[1].toLowerCase();
+			
+			if(isSetting) {
+				// Setting warp
+				Conf.instance().set("features.warps." + name, p.getWorld().getName() + ", " + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ());
+				Conf.update();
+				p.sendMessage("Set warp \"" + name + "\" to " + Conf.instance().getString("features.warps." + name.toLowerCase()));
+			}else {
+				// Teleporting to warp
+				String[] warpArgs = Conf.instance().getString("features.warps." + name).split(", ");
+				Location warpLoc = new Location(Bukkit.getWorld(warpArgs[0]), Integer.parseInt(warpArgs[1]), Integer.parseInt(warpArgs[2]), Integer.parseInt(warpArgs[3]));
+				
+				// Effects and Teleport
+				Effects.emitParticle(p.getLocation(), Particle.CLOUD, 10, 0, 1, 0);
+				Effects.playSound(p.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1, 1);
+				p.teleport(warpLoc);
+				p.sendMessage("You have arrived at " + name + "...");
+				Effects.emitParticle(p.getLocation(), Particle.PORTAL, 500, 0, 1, 0);
+				Effects.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+			}
+		}else {
+			Message.invalidArgs(p, "/warp " + ChatColor.UNDERLINE + "<set/to>" + ChatColor.RESET + ChatColor.RED + " <name>");
+			return true;
+		}
+		
+		return true;
+	}
+}

@@ -1,0 +1,22 @@
+if(Conf.playerDataExists(e.getPlayer(), "gang")) {
+			
+			Particle particle = Particle.CRIT;
+			double height = 0;
+			
+			if(Conf.instance().get(Conf.playerData(e.getPlayer(), "gang")).toString().equalsIgnoreCase("blood")) {
+				particle = Particle.DRIP_LAVA;
+				height = 0.05;
+			}else {
+				particle = Particle.WATER_WAKE;
+				height = 0.25;
+			}
+			
+			e.getPlayer().getWorld().spawnParticle(particle, e.getPlayer().getLocation().add(0, height, 0), 0);
+			e.getPlayer().getWorld().spawnParticle(particle, e.getPlayer().getLocation().add(0.25, height, 0), 0);
+			e.getPlayer().getWorld().spawnParticle(particle, e.getPlayer().getLocation().add(0, height, 0.25), 0);
+			e.getPlayer().getWorld().spawnParticle(particle, e.getPlayer().getLocation().add(0.25, height, 0.25), 0);
+			e.getPlayer().getWorld().spawnParticle(particle, e.getPlayer().getLocation().add(0, height, 0), 0);
+			e.getPlayer().getWorld().spawnParticle(particle, e.getPlayer().getLocation().add(-0.25, height, 0), 0);
+			e.getPlayer().getWorld().spawnParticle(particle, e.getPlayer().getLocation().add(0, height, -0.25), 0);
+			e.getPlayer().getWorld().spawnParticle(particle, e.getPlayer().getLocation().add(-0.25, height, -0.25), 0);
+		}

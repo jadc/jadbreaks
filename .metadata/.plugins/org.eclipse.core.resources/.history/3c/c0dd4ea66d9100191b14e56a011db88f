@@ -1,0 +1,61 @@
+package me.jadc.jadbreaks.cmd;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import me.jadc.jadbreaks.tools.Conf;
+import me.jadc.jadbreaks.tools.Message;
+import net.md_5.bungee.api.ChatColor;
+
+public class Warper implements CommandExecutor {
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		
+		if(!(sender instanceof Player)) return true;
+		
+		Player p = (Player) sender;
+		
+		if(args.length <= 1) {
+			Message.invalidArgs(p, "/warp " + ChatColor.UNDERLINE + "<set/to> <name>");
+			return true;
+		}
+		if(args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("to")) {
+			boolean isSetting = (args[0].equalsIgnoreCase("set") ? true : false);
+			
+			// Place name
+			String[] nameArgs = {""};
+			String name = "";
+			for(int i = 1; i < args.length; i++) nameArgs[i] = args[i];
+			Message.d(args[0] + ", " + name);
+			
+			if(isSetting) {
+				// Setting warp
+				List<String> warps;
+				if(Conf.instance().getStringList("features.warps") != null) {
+					warps = Conf.instance().getStringList("features.warps");
+				}else {
+					warps = new ArrayList<String>();
+				}
+				
+				warps.add(name + "," + p.getLocation().getBlockX() + "," + p.getLocation().getBlockY() + "," + p.getLocation().getBlockZ());
+				
+				Conf.instance().set("features.warps", warps);
+				Conf.update();
+				p.sendMessage("Set warp \"" + name + "\" to ");
+			}else {
+				// Teleporting to warp
+				p.sendMessage("Teleporting to " + name + "...");
+			}
+		}else {
+			Message.invalidArgs(p, "/warp " + ChatColor.UNDERLINE + "<set/to>" + ChatColor.RESET + ChatColor.RED + " <name>");
+			return true;
+		}
+		
+		return true;
+	}
+}
