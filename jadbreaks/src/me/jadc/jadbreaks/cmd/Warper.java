@@ -1,15 +1,16 @@
 package me.jadc.jadbreaks.cmd;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import me.jadc.jadbreaks.objects.Perk;
 import me.jadc.jadbreaks.tools.Conf;
 import me.jadc.jadbreaks.tools.Effects;
 import me.jadc.jadbreaks.tools.Message;
@@ -26,6 +27,10 @@ public class Warper implements CommandExecutor {
 		
 		Player p = (Player) sender;
 		
+		if(!Perk.hasPerk(p, "Warper")) {
+			Message.noPerk(p);
+			return true;
+		}
 		if(args.length <= 1 || args.length > 2) {
 			Message.invalidArgs(p, "/warp " + ChatColor.UNDERLINE + "<set/to> <name>");
 			return true;
@@ -38,22 +43,28 @@ public class Warper implements CommandExecutor {
 			
 			if(isSetting) {
 				// Setting warp
-				Conf.instance().set("features.warps." + name, p.getWorld().getName() + ", " + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ());
-				Conf.update();
-				p.sendMessage("Set warp \"" + name + "\" to " + Conf.instance().getString("features.warps." + name.toLowerCase()));
+				Conf.warpData.getConfig().set(name, p.getLocation());
+				Conf.warpData.save();
+				p.sendMessage("Set warp \"" + name + "\" to " + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ());
 			}else {
+				
+				if(!Conf.warpData.getConfig().contains(name)) {
+					Message.error(p, "Invalid warp");
+					return true;
+				}
+				
 				// Teleporting to warp
-				String[] warpArgs = Conf.instance().getString("features.warps." + name).split(", ");
-				Location warpLoc = new Location(Bukkit.getWorld(warpArgs[0]), Integer.parseInt(warpArgs[1]), Integer.parseInt(warpArgs[2]), Integer.parseInt(warpArgs[3]));
+				Location warpLoc = (Location) Conf.warpData.getConfig().get(name);
 				
 				// Effects and Teleport
+				p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, 255, true));
 				Effects.emitColoredParticle(p.getLocation(), count, 0.2, 0.8, 0.2, 255, 0, 255);
 				Effects.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+				if(Math.random() < 0.05) p.getWorld().spawnEntity(p.getLocation(), EntityType.ENDERMITE);
 				p.teleport(warpLoc);
 				p.sendMessage("You have arrived at " + name + "...");
 				Effects.emitColoredParticle(p.getLocation(), count, 0.2, 0.8, 0.2, 255, 0, 255);
 				Effects.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
-				p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*5, 1, true));
 			}
 		}else {
 			Message.invalidArgs(p, "/warp " + ChatColor.UNDERLINE + "<set/to>" + ChatColor.RESET + ChatColor.RED + " <name>");

@@ -1,0 +1,7 @@
+package me.jadc.jadbreaks.items;
+
+public class Perks {
+	public static void registerPerks() {
+		
+	}
+}

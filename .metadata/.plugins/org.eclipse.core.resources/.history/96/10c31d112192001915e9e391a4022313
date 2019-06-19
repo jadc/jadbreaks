@@ -1,0 +1,53 @@
+package me.jadc.jadbreaks.tools;
+
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+
+import me.jadc.jadbreaks.jb;
+import me.jadc.jadbreaks.objects.ConfigFile;
+
+public class Conf implements Listener {
+	
+	public static ConfigFile playerData;
+	
+	public static void initializeConfigurationFiles() {
+		jb.getInstance().saveDefaultConfig();
+		playerData = new ConfigFile("players");
+	}
+	
+	// setup player data
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		playerData.getConfig().set("test", Math.random());
+		playerData.save();
+		if(!exists( "players." + e.getPlayer().getUniqueId() )) {
+			updateDefaultConfig();
+		}
+	}
+	
+	public static void updateDefaultConfig() {
+		jb.getInstance().getConfig().options().copyDefaults(true);
+		jb.getInstance().saveConfig();
+	}
+	
+	public static boolean exists(String key) {
+		return jb.getInstance().getConfig().contains(key);
+	}
+	
+	public static boolean playerDataExists(Player p, String key) {
+		return jb.getInstance().getConfig().contains(playerData(p, key));
+	}
+	
+	public static String playerData(Player p, String key) {
+		return "players." + p.getUniqueId() + "." + key;
+	}
+	
+	public static FileConfiguration instance() {
+		return jb.getInstance().getConfig();
+	}
+	
+	
+}

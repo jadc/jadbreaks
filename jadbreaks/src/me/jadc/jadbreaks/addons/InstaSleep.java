@@ -34,7 +34,7 @@ public class InstaSleep implements Listener {
 			if(sleepTask == 0) {
 				// Announcement
 				Bukkit.broadcastMessage(e.getPlayer().getDisplayName() + " went to sleep");
-				sleepTask = jb.instance.getServer().getScheduler().runTaskTimerAsynchronously(jb.instance, new Runnable(){
+				sleepTask = jb.getInstance().getServer().getScheduler().runTaskTimerAsynchronously(jb.getInstance(), new Runnable(){
 					
 					@Override
 					public void run() {

@@ -44,7 +44,7 @@ public class PhilosophersStone extends ItemStack implements Listener {
 	}
 	
 	public static void registerRecipe() {
-		ShapedRecipe pStoneRecipe = new ShapedRecipe(new NamespacedKey(jb.instance, "Philosophers_Stone"), new PhilosophersStone());
+		ShapedRecipe pStoneRecipe = new ShapedRecipe(new NamespacedKey(jb.getInstance(), "Philosophers_Stone"), new PhilosophersStone());
 		pStoneRecipe.shape("GRG", "RDR", "GRG");
 		pStoneRecipe.setIngredient('G', Material.GLOWSTONE_DUST);
 		pStoneRecipe.setIngredient('R', Material.REDSTONE);

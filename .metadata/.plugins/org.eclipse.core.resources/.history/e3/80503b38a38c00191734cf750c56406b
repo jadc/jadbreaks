@@ -1,7 +1,0 @@
-package me.jadc.jadbreaks.items;
-
-import me.jadc.jadbreaks.objects.Item;
-
-public class Test extends Item {
-
-}

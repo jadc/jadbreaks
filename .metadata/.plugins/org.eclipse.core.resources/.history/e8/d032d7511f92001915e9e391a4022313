@@ -1,0 +1,19 @@
+package me.jadc.jadbreaks.objects;
+
+import java.io.File;
+
+import org.bukkit.configuration.file.FileConfiguration;
+
+public class ConfigFile {
+	private File customConfigFile;
+	private FileConfiguration customConfig;
+	
+	// Can a constructor even be private?
+	private ConfigFile(String fileName) {
+		
+	}
+	
+	public FileConfiguration getConfig() {
+		return this.customConfig;
+	}
+}

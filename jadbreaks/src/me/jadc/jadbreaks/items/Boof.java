@@ -33,13 +33,13 @@ public class Boof extends ItemStack implements Listener {
 	}
 	
 	public static void registerRecipe() {
-		ShapedRecipe boofRecipe = new ShapedRecipe(new NamespacedKey(jb.instance, "The_Boof"), new Boof());
+		ShapedRecipe boofRecipe = new ShapedRecipe(new NamespacedKey(jb.getInstance(), "The_Boof"), new Boof());
 		boofRecipe.shape(" pg", " f ", " s ");
 		boofRecipe.setIngredient('p', Material.PAPER);
 		boofRecipe.setIngredient('g', Material.GRASS);
 		boofRecipe.setIngredient('f', Material.FLINT);
 		boofRecipe.setIngredient('s', Material.STICK);
-		jb.instance.getServer().addRecipe(boofRecipe);
+		jb.getInstance().getServer().addRecipe(boofRecipe);
 	}
 
 	Random r = new Random();
@@ -52,16 +52,14 @@ public class Boof extends ItemStack implements Listener {
 				
 				Location location = p.getEyeLocation();
 				Vector direction = location.getDirection();
-				int rand = r.nextInt(100) + 1;
 				
 				p.getWorld().spawnParticle(Particle.CLOUD, location.getX(), location.getY(), 
-						location.getZ(), 0, (float) direction.getX(), 1.5, (float) direction.getZ(), 0.2D, null);
+						location.getZ(), 0, (float) direction.getX(), 0.5, (float) direction.getZ(), 0.2D, null);
 				
 				p.getWorld().playSound(p.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.1F, 0.5F);
 				
 				p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 3*20, 1));
 				p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 5*20, 1));
-				if(rand <= 1) p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 2*20, 1));
 			}
 		}
 	}

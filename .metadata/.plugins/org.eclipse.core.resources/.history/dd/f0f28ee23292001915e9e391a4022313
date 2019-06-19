@@ -1,0 +1,112 @@
+package me.jadc.jadbreaks;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import me.jadc.jadbreaks.addons.ChangelogNotification;
+import me.jadc.jadbreaks.addons.ChatPing;
+import me.jadc.jadbreaks.addons.DeathSave;
+import me.jadc.jadbreaks.addons.InstaSleep;
+import me.jadc.jadbreaks.addons.XPDropAlways;
+import me.jadc.jadbreaks.cmd.BoxOfBlocks;
+import me.jadc.jadbreaks.cmd.Info;
+import me.jadc.jadbreaks.cmd.Jihad;
+import me.jadc.jadbreaks.cmd.Raw;
+import me.jadc.jadbreaks.cmd.Reload;
+import me.jadc.jadbreaks.cmd.TempBan;
+import me.jadc.jadbreaks.cmd.Warper;
+import me.jadc.jadbreaks.items.Boof;
+import me.jadc.jadbreaks.items.Jetpack;
+import me.jadc.jadbreaks.items.PhilosophersStone;
+import me.jadc.jadbreaks.tools.Conf;
+import net.md_5.bungee.api.ChatColor;
+
+public class jb extends JavaPlugin {
+	
+	public static jb instance;
+	PluginManager p = getServer().getPluginManager();
+	
+	public void onEnable() {
+		
+		// Instance
+		instance = this;
+		
+		// Config setup
+		Conf.initializeConfigurationFiles();
+		
+		// Plugin inits
+		pluginInitialization();
+	}
+	
+	public static jb getInstance() {
+		return instance;
+	}
+	
+	private void pluginInitialization() {
+		// Event Listeners
+		
+		
+		getServer().getPluginManager().registerEvents(new Conf(), this);
+		getServer().getPluginManager().registerEvents(new ChangelogNotification(), this);
+		getServer().getPluginManager().registerEvents(new TempBan(), this);
+		if(Conf.instance().getBoolean("features.addons.instaSleep")) getServer().getPluginManager().registerEvents(new InstaSleep(), this);
+		if(Conf.instance().getBoolean("features.addons.xpDropAlways")) getServer().getPluginManager().registerEvents(new XPDropAlways(), this);
+		if(Conf.instance().getBoolean("features.addons.chatPing")) getServer().getPluginManager().registerEvents(new ChatPing(), this);
+		if(Conf.instance().getBoolean("features.addons.deathSave")) getServer().getPluginManager().registerEvents(new DeathSave(), this);
+		
+		// Command Listeners
+		getCommand("jb").setExecutor(new Info());
+		getCommand("jihad").setExecutor(new Jihad());
+		getCommand("rr").setExecutor(new Reload());
+		getCommand("tempban").setExecutor(new TempBan());
+		getCommand("raw").setExecutor(new Raw());
+		getCommand("warp").setExecutor(new Warper());
+		
+		// Jetpack
+		if(Conf.instance().getBoolean("features.items.jetpack.enabled")) {
+			getServer().getPluginManager().registerEvents(new Jetpack(), this);
+			Jetpack.registerRecipe();
+		}
+		
+		// Philospher's Stone
+		if(Conf.instance().getBoolean("features.items.pStone.enabled")) {
+			getServer().getPluginManager().registerEvents(new PhilosophersStone(), this);
+			PhilosophersStone.registerRecipe();
+		}
+		
+		// The Boof
+		if(Conf.instance().getBoolean("features.items.theBoof.enabled")) {
+			getServer().getPluginManager().registerEvents(new Boof(), this);
+			Boof.registerRecipe();
+		}
+		
+		// Box of Blocks
+		if(Conf.instance().getBoolean("features.addons.boxOfBlocks.enabled")) {
+			getServer().getPluginManager().registerEvents(new BoxOfBlocks(), this);
+			getCommand("bob").setExecutor(new BoxOfBlocks());
+		}
+				
+		// Auto restart
+		if(Conf.instance().getBoolean("features.autoRestart.enabled")) {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					for(Player a : Bukkit.getOnlinePlayers()) {
+						a.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 10*20, 999));
+						a.kickPlayer(ChatColor.LIGHT_PURPLE + "The server is performing an automatically scheduled server restart. Please wait a few seconds.");
+					}
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");
+				}
+			}.runTaskLater(this, 20*60*60*Conf.instance().getInt("features.autoRestart.hourInterval"));
+		}
+	}
+	
+	public void onDisable() {
+		
+	}
+}

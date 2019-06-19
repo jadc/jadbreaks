@@ -14,21 +14,21 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class ChangelogNotification implements Listener {
 	
-	String version = jb.instance.getDescription().getVersion();
+	String version = jb.getInstance().getDescription().getVersion();
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
-		if(Conf.instance().getString(Conf.playerData(e.getPlayer(), "version")) != version) {
+		if(Conf.playerData.getConfig().getString(e.getPlayer().getUniqueId() + ".version") != version) {
 			// Havent seen new changelog
-			Conf.instance().set(Conf.playerData(e.getPlayer(), "version"), version);
-			Conf.update();
+			Conf.playerData.getConfig().set(e.getPlayer().getUniqueId() + ".version", version);
+			Conf.playerData.save();
 			
 			String ob = ChatColor.YELLOW + " " + ChatColor.MAGIC + "! " + ChatColor.RESET;
 			
 			e.getPlayer().sendMessage("");
 			e.getPlayer().sendMessage(ob + ChatColor.LIGHT_PURPLE + "The server has recieved a new patch!");
 			e.getPlayer().sendMessage(ob + ChatColor.LIGHT_PURPLE + "To see what is new in version " + version + ", click below.");
-			TextComponent message = new TextComponent(ob + ChatColor.AQUA + "" + ChatColor.UNDERLINE + jb.instance.getDescription().getName() + " Patch " + version + " Changelog");
+			TextComponent message = new TextComponent(ob + ChatColor.AQUA + "" + ChatColor.UNDERLINE + jb.getInstance().getDescription().getName() + " Patch " + version + " Changelog");
 			message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("https://jadc.github.io/jadbreaks/" + version).create()));
 			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://jadc.github.io/jadbreaks/" + version));
 			e.getPlayer().spigot().sendMessage(message);

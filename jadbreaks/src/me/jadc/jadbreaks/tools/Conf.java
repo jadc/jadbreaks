@@ -1,42 +1,46 @@
 package me.jadc.jadbreaks.tools;
 
+import java.util.ArrayList;
+
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import me.jadc.jadbreaks.jb;
+import me.jadc.jadbreaks.objects.ConfigFile;
 
 public class Conf implements Listener {
 	
-	// setup player data
-	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
-		if(!exists( "players." + e.getPlayer().getUniqueId() )) {
-			update();
-		}
+	public static ConfigFile playerData;
+	public static ConfigFile warpData;
+	
+	public static void initializeConfigurationFiles() {
+		jb.getInstance().saveDefaultConfig();
+		playerData = new ConfigFile("players");
+		warpData = new ConfigFile("warps");
 	}
 	
-	public static void update() {
-		jb.instance.getConfig().options().copyDefaults(true);
-		jb.instance.saveConfig();
+	// setup player data defaults
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		String uuid = e.getPlayer().getUniqueId().toString();
+		if(!playerData.getConfig().contains(uuid + ".perks")) playerData.getConfig().set(uuid + ".perks", new ArrayList<String>());
+		if(!playerData.getConfig().contains(uuid + ".approved")) playerData.getConfig().set(uuid + ".approved", false);
+		playerData.save();
+	}
+	
+	public static void updateDefaultConfig() {
+		jb.getInstance().getConfig().options().copyDefaults(true);
+		jb.getInstance().saveConfig();
 	}
 	
 	public static boolean exists(String key) {
-		return jb.instance.getConfig().contains(key);
-	}
-	
-	public static boolean playerDataExists(Player p, String key) {
-		return jb.instance.getConfig().contains(playerData(p, key));
-	}
-	
-	public static String playerData(Player p, String key) {
-		return "players." + p.getUniqueId() + "." + key;
+		return jb.getInstance().getConfig().contains(key);
 	}
 	
 	public static FileConfiguration instance() {
-		return jb.instance.getConfig();
+		return jb.getInstance().getConfig();
 	}
 	
 	
