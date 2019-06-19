@@ -1,0 +1,5 @@
+package me.jadc.jadbreaks.cmd;
+
+public class Approve {
+
+}

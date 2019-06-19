@@ -12,11 +12,16 @@ public class Message {
 	public static int debugSent = 0;
 	
 	public static void noPerms(CommandSender p) {
-		p.sendMessage(ChatColor.DARK_RED + "You lack the permission to execute this command");
+		p.sendMessage(ChatColor.RED + "You lack the permission to execute this command.");
+	}
+	
+	public static void noPerk(CommandSender p) {
+		p.sendMessage(ChatColor.RED + "This ability is just within your grasp...");
+		p.sendMessage(ChatColor.RED + "You simply lack the required " + ChatColor.GOLD + "perk" + ChatColor.RED + "!");
 	}
 	
 	public static void error(CommandSender p, String msg) {
-		p.sendMessage(ChatColor.DARK_RED + "An error occured. " + msg);
+		p.sendMessage(ChatColor.RED + "An error occured. " + msg + ".");
 	}
 	
 	public static void invalidArgs(CommandSender p, String msg) {

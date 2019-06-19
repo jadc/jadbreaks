@@ -38,7 +38,7 @@ public class TempBan implements CommandExecutor, Listener {
 				return true;
 			}
 			
-			Player victim = jb.instance.getServer().getPlayer(args[0]);
+			Player victim = jb.getInstance().getServer().getPlayer(args[0]);
 			int minutes = 0;
 			String reason = "You are banned.";
 			if(args.length > 2) {
@@ -49,7 +49,7 @@ public class TempBan implements CommandExecutor, Listener {
 			}
 			
 			if(victim == null) {
-				Message.error(sender, "Not a real player or player is offline.");
+				Message.error(sender, "Not a real player or player is offline");
 				return true;
 			}
 			

@@ -1,0 +1,71 @@
+package me.jadc.jadbreaks.objects;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import me.jadc.jadbreaks.tools.Conf;
+import me.jadc.jadbreaks.tools.Effects;
+import net.md_5.bungee.api.ChatColor;
+
+public class Perk extends ItemStack implements Listener {
+	
+	public Perk() {}
+	
+	public Perk(String name, String desc) {
+		super(Material.APPLE);
+		
+		ItemMeta meta = getItemMeta();
+		List<String> lore = new ArrayList<String>();
+		meta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + name + " Perk");
+		lore.add(ChatColor.YELLOW + "Consume this apple!");
+		lore.add(ChatColor.YELLOW + "Thou shall be granted with the");
+		lore.add(ChatColor.YELLOW + "power of " + desc.toLowerCase() + ".");
+		meta.setLore(lore);
+		meta.addEnchant(Enchantment.DURABILITY, 1, true);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		setItemMeta(meta);
+	}
+	
+	@EventHandler
+	public void onInteract(PlayerInteractEvent e) {
+		if(e.getItem() == null) return;
+		if(e.getItem().getType() == null) return;
+		if(!e.getItem().hasItemMeta()) return;
+		if(e.getItem().getItemMeta() == null) return;
+		if(!e.getItem().getItemMeta().hasLore()) return;
+		if(e.getItem().getItemMeta().getLore() == null) return;
+		if(e.getItem().getType().equals(Material.APPLE)) {
+			String perk = ChatColor.stripColor(e.getItem().getItemMeta().getDisplayName()).replaceAll(" Perk", "");
+			
+			if(Conf.playerData.getConfig().getBoolean(e.getPlayer().getUniqueId() + ".perks." + perk))
+			
+			e.setCancelled(true);
+			e.getPlayer().sendMessage(perk);
+			
+			// Consumption
+			if(e.getItem().getAmount() > 1) {
+				e.getItem().setAmount(e.getItem().getAmount() - 1);
+			}else {
+				e.getItem().setAmount(0);
+			}
+			
+			// Effects
+			Effects.playSound(e.getPlayer().getLocation(), Sound.ENTITY_PLAYER_BURP, 0.5F, 1.0F);
+			Effects.playSound(e.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5F, 1.0F);
+			Effects.emitColoredParticle(e.getPlayer().getEyeLocation(), 10, 0, 0, 0, 255, 255, 0);
+			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, 255, true));
+		}
+	}
+}

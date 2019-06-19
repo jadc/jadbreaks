@@ -1,0 +1,15 @@
+package me.jadc.jadbreaks.objects;
+
+import org.bukkit.Material;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+public class Perk extends ItemStack implements Listener {
+	
+	public Perk(Material material, String name, String cfgElement) {
+		super(material);
+		
+		ItemMeta meta = getItemMeta();
+	}
+}

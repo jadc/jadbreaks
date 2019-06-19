@@ -57,7 +57,7 @@ public class Jetpack extends ItemStack implements Listener {
 	}
 	
 	public static void registerRecipe() {
-		ShapelessRecipe jetpackRecipe = new ShapelessRecipe(new NamespacedKey(jb.instance, "Jetpack"), new Jetpack());
+		ShapelessRecipe jetpackRecipe = new ShapelessRecipe(new NamespacedKey(jb.getInstance(), "Jetpack"), new Jetpack());
 		jetpackRecipe.addIngredient(Material.IRON_CHESTPLATE);
 		jetpackRecipe.addIngredient(Material.TNT);
 		jetpackRecipe.addIngredient(Material.TNT);

@@ -1,0 +1,65 @@
+package me.jadc.jadbreaks.cmd;
+
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+
+import me.jadc.jadbreaks.tools.Conf;
+import me.jadc.jadbreaks.tools.Message;
+import net.md_5.bungee.api.ChatColor;
+
+public class Approve implements CommandExecutor, Listener {
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		
+		if(cmd.getName().equalsIgnoreCase("approve")){
+			
+			if(args.length != 1) {
+				Message.invalidArgs(sender, "/approve <user>");
+				return true;
+			}
+			
+			if(!sender.isOp()) {
+				Message.noPerms(sender);
+				return true;
+			}
+			
+			Player p = Bukkit.getPlayer(args[0]);
+			
+			if(p == null) {
+				Message.error(sender, "Invalid player");
+				return true;
+			}
+			
+			Conf.playerData.getConfig().set(p.getUniqueId() + ".approved", true);
+			approve(p);
+			Bukkit.broadcastMessage(p.getDisplayName() + " has been approved to play!");
+		}
+		
+		return true;
+	}
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		if(Conf.playerData.getConfig().getBoolean(e.getPlayer().getUniqueId() + ".approved")){
+			approve(e.getPlayer());
+		}else {
+			e.getPlayer().setGameMode(GameMode.SPECTATOR);
+		}
+	}
+	
+	public void approve(Player p) {
+		p.setGameMode(GameMode.SURVIVAL);
+		Message.bar(p, ChatColor.GOLD + "Where we droppin?");
+		p.teleport(new Location(Bukkit.getServer().getWorld("world"), Math.random() * 100, 255, Math.random() * 100));
+		p.setFallDistance(-1000000F);
+	}
+}

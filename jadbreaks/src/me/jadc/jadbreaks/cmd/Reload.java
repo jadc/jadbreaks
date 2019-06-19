@@ -22,7 +22,7 @@ public class Reload implements CommandExecutor {
 			
 			Instant before = Instant.now();
 			
-			jb.instance.reloadConfig();
+			jb.getInstance().reloadConfig();
 			Bukkit.reload();
 			
 			Instant after = Instant.now();

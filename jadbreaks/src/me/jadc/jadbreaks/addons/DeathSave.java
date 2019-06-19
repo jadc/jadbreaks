@@ -38,7 +38,7 @@ public class DeathSave implements Listener {
 	public void onRespawn(PlayerRespawnEvent e) {
 		
 		if(!Conf.instance().getBoolean("features.deathSave.keepHealth")) {
-			Bukkit.getScheduler().runTaskLaterAsynchronously(jb.instance, new Runnable() {
+			Bukkit.getScheduler().runTaskLaterAsynchronously(jb.getInstance(), new Runnable() {
 			    @Override
 			    public void run() {
 			    	e.getPlayer().setHealth(e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue() / 5);
@@ -47,7 +47,7 @@ public class DeathSave implements Listener {
 		}
 		
 		if(Conf.instance().getBoolean("features.deathSave.keepHunger")) {
-			Bukkit.getScheduler().runTaskLaterAsynchronously(jb.instance, new Runnable() {
+			Bukkit.getScheduler().runTaskLaterAsynchronously(jb.getInstance(), new Runnable() {
 			    @Override
 			    public void run() {
 			    	if(hungerMap.get(e.getPlayer().getUniqueId()) > 0) {

@@ -23,6 +23,3 @@ features:
   autoRestart:
     enabled: true
     hourInterval: 4
-  warps:
-    
-players:

@@ -2,6 +2,7 @@ package me.jadc.jadbreaks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -12,6 +13,7 @@ import me.jadc.jadbreaks.addons.ChatPing;
 import me.jadc.jadbreaks.addons.DeathSave;
 import me.jadc.jadbreaks.addons.InstaSleep;
 import me.jadc.jadbreaks.addons.XPDropAlways;
+import me.jadc.jadbreaks.cmd.Approve;
 import me.jadc.jadbreaks.cmd.BoxOfBlocks;
 import me.jadc.jadbreaks.cmd.Info;
 import me.jadc.jadbreaks.cmd.Jihad;
@@ -21,30 +23,46 @@ import me.jadc.jadbreaks.cmd.TempBan;
 import me.jadc.jadbreaks.cmd.Warper;
 import me.jadc.jadbreaks.items.Boof;
 import me.jadc.jadbreaks.items.Jetpack;
+import me.jadc.jadbreaks.items.Perks;
 import me.jadc.jadbreaks.items.PhilosophersStone;
+import me.jadc.jadbreaks.objects.Perk;
 import me.jadc.jadbreaks.tools.Conf;
 import net.md_5.bungee.api.ChatColor;
 
 public class jb extends JavaPlugin {
 	
 	public static jb instance;
+	PluginManager p;
 	
 	public void onEnable() {
 		
 		// Instance
 		instance = this;
+		p = getServer().getPluginManager();
 		
 		// Config setup
-		saveDefaultConfig();
+		Conf.initializeConfigurationFiles();
 		
+		// Plugin inits
+		pluginInitialization();
+		Perks.registerPerks();
+	}
+	
+	public static jb getInstance() {
+		return instance;
+	}
+	
+	private void pluginInitialization() {
 		// Event Listeners
-		this.getServer().getPluginManager().registerEvents(new Conf(), this);
-		this.getServer().getPluginManager().registerEvents(new ChangelogNotification(), this);
-		this.getServer().getPluginManager().registerEvents(new TempBan(), this);
-		if(Conf.instance().getBoolean("features.addons.instaSleep")) this.getServer().getPluginManager().registerEvents(new InstaSleep(), this);
-		if(Conf.instance().getBoolean("features.addons.xpDropAlways")) this.getServer().getPluginManager().registerEvents(new XPDropAlways(), this);
-		if(Conf.instance().getBoolean("features.addons.chatPing")) this.getServer().getPluginManager().registerEvents(new ChatPing(), this);
-		if(Conf.instance().getBoolean("features.addons.deathSave")) this.getServer().getPluginManager().registerEvents(new DeathSave(), this);
+		p.registerEvents(new Perk(), this);
+		p.registerEvents(new Conf(), this);
+		p.registerEvents(new ChangelogNotification(), this);
+		p.registerEvents(new TempBan(), this);
+		p.registerEvents(new Approve(), this);
+		if(Conf.instance().getBoolean("features.addons.instaSleep")) p.registerEvents(new InstaSleep(), this);
+		if(Conf.instance().getBoolean("features.addons.xpDropAlways")) p.registerEvents(new XPDropAlways(), this);
+		if(Conf.instance().getBoolean("features.addons.chatPing")) p.registerEvents(new ChatPing(), this);
+		if(Conf.instance().getBoolean("features.addons.deathSave")) p.registerEvents(new DeathSave(), this);
 		
 		// Command Listeners
 		getCommand("jb").setExecutor(new Info());
@@ -53,31 +71,32 @@ public class jb extends JavaPlugin {
 		getCommand("tempban").setExecutor(new TempBan());
 		getCommand("raw").setExecutor(new Raw());
 		getCommand("warp").setExecutor(new Warper());
+		getCommand("approve").setExecutor(new Approve());
 		
 		// Jetpack
 		if(Conf.instance().getBoolean("features.items.jetpack.enabled")) {
-			getServer().getPluginManager().registerEvents(new Jetpack(), this);
+			p.registerEvents(new Jetpack(), this);
 			Jetpack.registerRecipe();
 		}
 		
 		// Philospher's Stone
 		if(Conf.instance().getBoolean("features.items.pStone.enabled")) {
-			getServer().getPluginManager().registerEvents(new PhilosophersStone(), this);
+			p.registerEvents(new PhilosophersStone(), this);
 			PhilosophersStone.registerRecipe();
 		}
 		
 		// The Boof
 		if(Conf.instance().getBoolean("features.items.theBoof.enabled")) {
-			getServer().getPluginManager().registerEvents(new Boof(), this);
+			p.registerEvents(new Boof(), this);
 			Boof.registerRecipe();
 		}
 		
 		// Box of Blocks
 		if(Conf.instance().getBoolean("features.addons.boxOfBlocks.enabled")) {
-			getServer().getPluginManager().registerEvents(new BoxOfBlocks(), this);
+			p.registerEvents(new BoxOfBlocks(), this);
 			getCommand("bob").setExecutor(new BoxOfBlocks());
 		}
-		
+				
 		// Auto restart
 		if(Conf.instance().getBoolean("features.autoRestart.enabled")) {
 			new BukkitRunnable() {
@@ -87,15 +106,10 @@ public class jb extends JavaPlugin {
 						a.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 10*20, 999));
 						a.kickPlayer(ChatColor.LIGHT_PURPLE + "The server is performing an automatically scheduled server restart. Please wait a few seconds.");
 					}
-					
-					execute("restart");
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");
 				}
 			}.runTaskLater(this, 20*60*60*Conf.instance().getInt("features.autoRestart.hourInterval"));
 		}
-	}
-	
-	public static void execute(String cmd) {
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
 	}
 	
 	public void onDisable() {

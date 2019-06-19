@@ -72,7 +72,7 @@ public class BoxOfBlocks implements CommandExecutor, Listener {
 		
 		if(cmd.getName().equalsIgnoreCase("bob")) {
 			if(!(sender instanceof Player)) {
-				Message.error(sender, "Ingame players only.");
+				Message.error(sender, "Ingame players only");
 				return true;
 			}
 			
@@ -89,23 +89,23 @@ public class BoxOfBlocks implements CommandExecutor, Listener {
 					List<String> blacklist = new ArrayList<String>();
 					blacklist.add("diamond_block");
 					Conf.instance().set(blacklistPath, blacklist);
-					Conf.update();
+					Conf.updateDefaultConfig();
 				}else {
-					Conf.update();
+					Conf.updateDefaultConfig();
 					List<String> newBlacklist = Conf.instance().getStringList(blacklistPath);
 					int increment = 0;
 					for(String m : newBlacklist) {
 						increment++;
 						if(Material.matchMaterial(m).equals(Material.matchMaterial(input))) {
 							// If blacklisted
-							Message.error(p, "That item is blacklisted.");
+							Message.error(p, "That item is blacklisted");
 							Bukkit.broadcastMessage(ChatColor.DARK_RED + p.getDisplayName() + " tried to spawn in " + String.join(" ", args).toString().toLowerCase() + ".");
 							return true;
 						}
 						if(increment >= newBlacklist.size()) {
 							Material block = Material.getMaterial(input);
 							if(!block.isBlock()) {
-								Message.error(p, "Blocks only.");
+								Message.error(p, "Blocks only");
 								return true;
 							}else {
 								
@@ -126,7 +126,7 @@ public class BoxOfBlocks implements CommandExecutor, Listener {
 					}
 				}
 			}else {
-				Message.error(p, "Not a real block.");
+				Message.error(p, "Not a real block");
 				Bukkit.broadcastMessage(ChatColor.DARK_GRAY + p.getDisplayName() + " tried to spawn in " + String.join(" ", args).toString().toLowerCase() + ".");
 			}
 		}
