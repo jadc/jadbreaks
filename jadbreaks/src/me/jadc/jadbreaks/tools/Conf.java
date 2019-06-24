@@ -14,13 +14,13 @@ public class Conf implements Listener {
 	
 	public static ConfigFile playerData;
 	public static ConfigFile warpData;
-	public static ConfigFile diamondLog;
+	public static ConfigFile log;
 	
 	public static void initializeConfigurationFiles() {
 		jb.getInstance().saveDefaultConfig();
 		playerData = new ConfigFile("players");
 		warpData = new ConfigFile("warps");
-		diamondLog = new ConfigFile("diamondlog");
+		log = new ConfigFile("log");
 	}
 	
 	// setup player data defaults

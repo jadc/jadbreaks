@@ -1,5 +1,8 @@
 package me.jadc.jadbreaks.cmd;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -7,6 +10,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -16,7 +22,7 @@ import me.jadc.jadbreaks.tools.Effects;
 import me.jadc.jadbreaks.tools.Message;
 import net.md_5.bungee.api.ChatColor;
 
-public class Warper implements CommandExecutor {
+public class Warper implements CommandExecutor, Listener {
 	
 	int count = 50;
 	
@@ -31,10 +37,22 @@ public class Warper implements CommandExecutor {
 			Message.noPerk(p);
 			return true;
 		}
+		
+		if(Conf.playerData.getConfig().contains(p.getUniqueId() + ".lastDamaged")) {
+			Instant before = Instant.parse(Conf.playerData.getConfig().getString(p.getUniqueId() + ".lastDamaged"));
+			Instant after = Instant.now();
+			if(Duration.between(before, after).toMillis() <= 60000) {
+				p.sendMessage(ChatColor.RED + "You have taken damage too recently to warp.");
+				p.sendMessage(ChatColor.RED + "Wait " + ((60000 - Duration.between(before, after).toMillis()) / 1000) + " more seconds.");
+				return true;
+			}
+		}
+		
 		if(args.length <= 1 || args.length > 2) {
 			Message.invalidArgs(p, "/warp " + ChatColor.UNDERLINE + "<set/to> <name>");
 			return true;
 		}
+		
 		if(args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("to")) {
 			boolean isSetting = (args[0].equalsIgnoreCase("set") ? true : false);
 			
@@ -72,5 +90,15 @@ public class Warper implements CommandExecutor {
 		}
 		
 		return true;
+	}
+	
+	// Last damage event
+	@EventHandler
+	public void onPlayerDamage(EntityDamageEvent e) {
+		if(e.getEntity() instanceof Player) {
+			Player p = (Player) e.getEntity();
+			Conf.playerData.getConfig().set(p.getUniqueId() + ".lastDamaged", Instant.now().toString());
+			Conf.playerData.save();
+		}
 	}
 }

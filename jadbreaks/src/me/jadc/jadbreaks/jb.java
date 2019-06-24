@@ -12,9 +12,9 @@ import me.jadc.jadbreaks.addons.ChangelogNotification;
 import me.jadc.jadbreaks.addons.ChatPing;
 import me.jadc.jadbreaks.addons.CustomArrowHandler;
 import me.jadc.jadbreaks.addons.DeathSave;
-import me.jadc.jadbreaks.addons.DiamondLog;
 import me.jadc.jadbreaks.addons.GodPets;
 import me.jadc.jadbreaks.addons.InstaSleep;
+import me.jadc.jadbreaks.addons.Log;
 import me.jadc.jadbreaks.addons.XPDropAlways;
 import me.jadc.jadbreaks.cmd.BoxOfBlocks;
 import me.jadc.jadbreaks.cmd.Info;
@@ -60,10 +60,9 @@ public class jb extends JavaPlugin {
 		p.registerEvents(new Conf(), this);
 		p.registerEvents(new ChangelogNotification(), this);
 		p.registerEvents(new TempBan(), this);
-		p.registerEvents(new DiamondLog(), this);
+		p.registerEvents(new Log(), this);
 		p.registerEvents(new DeathSave(), this);
 		p.registerEvents(new HeartContainer(), this);
-		if(Conf.instance().getBoolean("features.addons.perks")) p.registerEvents(new Perk(), this);
 		if(Conf.instance().getBoolean("features.addons.instaSleep")) p.registerEvents(new InstaSleep(), this);
 		if(Conf.instance().getBoolean("features.addons.xpDropAlways")) p.registerEvents(new XPDropAlways(), this);
 		if(Conf.instance().getBoolean("features.addons.chatPing")) p.registerEvents(new ChatPing(), this);
@@ -75,7 +74,15 @@ public class jb extends JavaPlugin {
 		getCommand("rr").setExecutor(new Reload());
 		getCommand("tempban").setExecutor(new TempBan());
 		getCommand("raw").setExecutor(new Raw());
-		getCommand("warp").setExecutor(new Warper());
+		getCommand("log").setExecutor(new Log());
+		
+		// Perks
+		if(Conf.instance().getBoolean("features.addons.perks")) {
+			p.registerEvents(new Perk(), this);
+			
+			p.registerEvents(new Warper(), this);
+			getCommand("warp").setExecutor(new Warper());
+		}
 		
 		// Custom Arrows
 		if(Conf.instance().getBoolean("features.addons.customarrows")){
