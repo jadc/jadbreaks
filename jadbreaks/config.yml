@@ -5,9 +5,10 @@ features:
       blacklist: 
     deathSave: 
       keepInv: false
-      keepHealth: true
+      keepHealth: false
       keepHunger: true
       keepExp: true
+      tellCoords: true
     chatPing: true
     instaSleep: true
     xpDropAlways: true

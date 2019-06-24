@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,6 +13,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 import me.jadc.jadbreaks.jb;
 import me.jadc.jadbreaks.tools.Conf;
+import me.jadc.jadbreaks.tools.Message;
 
 public class DeathSave implements Listener {
 	
@@ -34,6 +36,12 @@ public class DeathSave implements Listener {
 			e.setKeepLevel(true);
 		}
 		
+		// Coordinate Help
+		if(Conf.instance().getBoolean("features.addons.deathSave.tellCoords")) {
+			Location loc = e.getEntity().getLocation();
+			e.getEntity().sendMessage("You died at " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ() + " in " + loc.getWorld().getName());
+			Message.log(e.getEntity().getDisplayName() + " died at " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
+		}
 	}
 	
 	@EventHandler

@@ -1,0 +1,12 @@
+package me.jadc.jadbreaks.addons;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
+
+public class DeathHelp implements Listener {
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent e) {
+		e.
+	}
+}
