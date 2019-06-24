@@ -13,7 +13,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 import me.jadc.jadbreaks.jb;
 import me.jadc.jadbreaks.tools.Conf;
-import me.jadc.jadbreaks.tools.Message;
 
 public class DeathSave implements Listener {
 	
@@ -39,8 +38,7 @@ public class DeathSave implements Listener {
 		// Coordinate Help
 		if(Conf.instance().getBoolean("features.addons.deathSave.tellCoords")) {
 			Location loc = e.getEntity().getLocation();
-			e.getEntity().sendMessage("You died at " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ() + " in " + loc.getWorld().getName());
-			Message.log(e.getEntity().getDisplayName() + " died at " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
+			e.getEntity().sendMessage("You died at " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
 		}
 	}
 	
