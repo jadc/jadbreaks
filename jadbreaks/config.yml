@@ -11,9 +11,9 @@ features:
     chatPing: true
     instaSleep: true
     xpDropAlways: true
-    perks: false
     godPets: true
-    customarrows: true
+    perks: false
+    customarrows: false
   items:
     jetpack:
       enabled: true

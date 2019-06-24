@@ -47,7 +47,7 @@ public class Perk extends ItemStack implements Listener {
 		if(e.getItem().getItemMeta() == null) return;
 		if(!e.getItem().getItemMeta().hasLore()) return;
 		if(e.getItem().getItemMeta().getLore() == null) return;
-		if(e.getItem().getType().equals(Material.APPLE)) {
+		if(e.getItem().getType().equals(Material.GOLDEN_CARROT)) {
 			
 			e.setCancelled(true);
 			
