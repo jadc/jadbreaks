@@ -1,0 +1,7 @@
+package me.jadc.jadbreaks.items;
+
+import me.jadc.jadbreaks.objects.CustomArrow;
+
+public class ArrowTNT extends CustomArrow {
+	
+}

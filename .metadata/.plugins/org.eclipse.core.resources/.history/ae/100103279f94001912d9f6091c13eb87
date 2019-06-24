@@ -1,0 +1,30 @@
+package me.jadc.jadbreaks.items;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ShapelessRecipe;
+
+import me.jadc.jadbreaks.jb;
+import me.jadc.jadbreaks.objects.CustomArrow;
+
+public class ArrowTNT extends CustomArrow {
+
+	Material[] ingredients = new Material[1];
+	
+	public ArrowTNT() {
+		super("Arrow with TNT", ingredients);
+	}
+	
+	public static void registerRecipe() {
+		Bukkit.addRecipe(new ShapelessRecipe(new NamespacedKey(jb.getInstance(), "Arrow with TNT"), new ArrowTNT())
+				.addIngredient(Material.ARROW)
+				.addIngredient(Material.TNT)
+		);
+	}
+	
+	public static void onBlockHit(Block b) {
+		b.getLocation().getWorld().createExplosion(b.getLocation(), 4);
+	}
+}

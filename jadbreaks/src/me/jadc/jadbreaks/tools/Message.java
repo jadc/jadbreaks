@@ -1,5 +1,7 @@
 package me.jadc.jadbreaks.tools;
 
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,6 +37,10 @@ public class Message {
 	public static void d(String msg) {
 		debugSent++;
 		Bukkit.broadcastMessage(ChatColor.DARK_GREEN + "<DEBUG:" + debugSent + "> " + ChatColor.GREEN + msg);
+	}
+	
+	public static void log(String msg) {
+		Bukkit.getLogger().log(Level.INFO, msg);
 	}
 	
 	public static void bar(Player p, String msg) {

@@ -1,0 +1,24 @@
+package me.jadc.jadbreaks.objects;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import me.jadc.jadbreaks.jb;
+import net.md_5.bungee.api.ChatColor;
+
+public class CustomArrow extends ItemStack {
+	public CustomArrow(String name, Material[] ingredients) {
+		super(Material.ARROW);
+		ItemMeta meta = getItemMeta();
+		meta.setDisplayName(ChatColor.RESET + name);
+		setItemMeta(meta);
+		
+		ShapelessRecipe r = new ShapelessRecipe(new NamespacedKey(jb.getInstance(), name)
+		Bukkit.addRecipe(r, this);
+		);
+	}
+}

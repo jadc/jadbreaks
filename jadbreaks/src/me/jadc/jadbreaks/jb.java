@@ -10,10 +10,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.jadc.jadbreaks.addons.ChangelogNotification;
 import me.jadc.jadbreaks.addons.ChatPing;
+import me.jadc.jadbreaks.addons.CustomArrowHandler;
 import me.jadc.jadbreaks.addons.DeathSave;
+import me.jadc.jadbreaks.addons.DiamondLog;
+import me.jadc.jadbreaks.addons.GodPets;
 import me.jadc.jadbreaks.addons.InstaSleep;
 import me.jadc.jadbreaks.addons.XPDropAlways;
-import me.jadc.jadbreaks.cmd.Approve;
 import me.jadc.jadbreaks.cmd.BoxOfBlocks;
 import me.jadc.jadbreaks.cmd.Info;
 import me.jadc.jadbreaks.cmd.Jihad;
@@ -22,6 +24,7 @@ import me.jadc.jadbreaks.cmd.Reload;
 import me.jadc.jadbreaks.cmd.TempBan;
 import me.jadc.jadbreaks.cmd.Warper;
 import me.jadc.jadbreaks.items.Boof;
+import me.jadc.jadbreaks.items.HeartContainer;
 import me.jadc.jadbreaks.items.Jetpack;
 import me.jadc.jadbreaks.items.Perks;
 import me.jadc.jadbreaks.items.PhilosophersStone;
@@ -54,15 +57,17 @@ public class jb extends JavaPlugin {
 	
 	private void pluginInitialization() {
 		// Event Listeners
-		p.registerEvents(new Perk(), this);
 		p.registerEvents(new Conf(), this);
 		p.registerEvents(new ChangelogNotification(), this);
 		p.registerEvents(new TempBan(), this);
-		p.registerEvents(new Approve(), this);
+		p.registerEvents(new DiamondLog(), this);
+		p.registerEvents(new DeathSave(), this);
+		p.registerEvents(new HeartContainer(), this);
+		if(Conf.instance().getBoolean("features.addons.perks")) p.registerEvents(new Perk(), this);
 		if(Conf.instance().getBoolean("features.addons.instaSleep")) p.registerEvents(new InstaSleep(), this);
 		if(Conf.instance().getBoolean("features.addons.xpDropAlways")) p.registerEvents(new XPDropAlways(), this);
 		if(Conf.instance().getBoolean("features.addons.chatPing")) p.registerEvents(new ChatPing(), this);
-		if(Conf.instance().getBoolean("features.addons.deathSave")) p.registerEvents(new DeathSave(), this);
+		if(Conf.instance().getBoolean("features.addons.godPets")) p.registerEvents(new GodPets(), this);
 		
 		// Command Listeners
 		getCommand("jb").setExecutor(new Info());
@@ -71,7 +76,11 @@ public class jb extends JavaPlugin {
 		getCommand("tempban").setExecutor(new TempBan());
 		getCommand("raw").setExecutor(new Raw());
 		getCommand("warp").setExecutor(new Warper());
-		getCommand("approve").setExecutor(new Approve());
+		
+		// Custom Arrows
+		if(Conf.instance().getBoolean("features.addons.customarrows")){
+			p.registerEvents(new CustomArrowHandler(), this);
+		}
 		
 		// Jetpack
 		if(Conf.instance().getBoolean("features.items.jetpack.enabled")) {

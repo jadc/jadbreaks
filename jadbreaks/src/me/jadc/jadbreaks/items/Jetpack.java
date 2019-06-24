@@ -57,11 +57,15 @@ public class Jetpack extends ItemStack implements Listener {
 	}
 	
 	public static void registerRecipe() {
-		ShapelessRecipe jetpackRecipe = new ShapelessRecipe(new NamespacedKey(jb.getInstance(), "Jetpack"), new Jetpack());
-		jetpackRecipe.addIngredient(Material.IRON_CHESTPLATE);
-		jetpackRecipe.addIngredient(Material.TNT);
-		jetpackRecipe.addIngredient(Material.TNT);
-		Bukkit.addRecipe(jetpackRecipe);
+		Bukkit.addRecipe(new ShapelessRecipe(new NamespacedKey(jb.getInstance(), "Jetpack"), new Jetpack())
+				.addIngredient(Material.IRON_CHESTPLATE)
+				.addIngredient(Material.TNT)
+				.addIngredient(Material.TNT)
+				.addIngredient(Material.IRON_BLOCK)
+				.addIngredient(Material.IRON_BLOCK)
+				.addIngredient(Material.FLINT_AND_STEEL)
+				.addIngredient(Material.FLINT_AND_STEEL)
+		);
 	}
 	
 	public String fuelDisplay(int fuel) {

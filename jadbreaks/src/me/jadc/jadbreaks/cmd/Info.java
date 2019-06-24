@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import me.jadc.jadbreaks.jb;
-import me.jadc.jadbreaks.objects.Perk;
+import me.jadc.jadbreaks.items.HeartContainer;
 import net.md_5.bungee.api.ChatColor;
 
 public class Info implements CommandExecutor, Listener {
@@ -20,7 +20,7 @@ public class Info implements CommandExecutor, Listener {
 				p.sendMessage(ChatColor.GREEN + "Executing debug functions...");
 				
 			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				p.getInventory().addItem(new Perk("Warpsser", "teleportssation"));
+				p.getInventory().addItem(new HeartContainer());
 			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
 		}

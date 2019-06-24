@@ -11,9 +11,12 @@ features:
     chatPing: true
     instaSleep: true
     xpDropAlways: true
+    perks: false
+    godPets: true
+    customarrows: true
   items:
     jetpack:
-      enabled: false
+      enabled: true
       flyTickPerCoal: 40
       flySpeed: 15
     theBoof:

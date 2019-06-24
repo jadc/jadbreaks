@@ -39,7 +39,7 @@ public class InstaSleep implements Listener {
 					@Override
 					public void run() {
 						if(w.getTime() > 12000) { 
-							w.setTime(w.getTime() + 20);
+							w.setTime(w.getTime() + 10);
 						}else {
 							Bukkit.getServer().getScheduler().cancelTask(sleepTask);
 							sleepTask = 0;

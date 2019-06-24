@@ -1,23 +1,19 @@
 package me.jadc.jadbreaks.cmd;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
-import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import me.jadc.jadbreaks.jb;
+import me.jadc.jadbreaks.items.Ashes;
+import me.jadc.jadbreaks.tools.Effects;
 import me.jadc.jadbreaks.tools.Message;
 import net.md_5.bungee.api.ChatColor;
 
@@ -61,22 +57,11 @@ public class TempBan implements CommandExecutor, Listener {
 			}
 			
 			victim.getWorld().strikeLightningEffect(victim.getLocation());
-			victim.getLocation().getWorld().playEffect(victim.getLocation().add(0, 1, 0), Effect.STEP_SOUND, Material.DIAMOND_BLOCK);
-			victim.getLocation().getWorld().playEffect(victim.getLocation().add(0, 0, 0), Effect.STEP_SOUND, Material.DIAMOND_BLOCK);
+			Effects.emitBlockBreak(victim.getLocation(), Material.COAL_BLOCK);
+			Effects.emitBlockBreak(victim.getLocation().add(0, 1, 0), Material.COAL_BLOCK);
 			
 			//ashes
-			if(minutes > 0) {
-				ItemStack ash = new ItemStack(Material.CHARCOAL, 1);
-				ItemMeta ashMeta = ash.getItemMeta();
-				ashMeta.setDisplayName(ChatColor.RESET + victim.getDisplayName() + "\'s Ashes");
-				ArrayList<String> lore = new ArrayList<String>();
-				lore.add(ChatColor.GRAY + "Banned for " + minutes + " minutes for: " + reason);
-				ashMeta.setLore(lore);
-				ashMeta.addEnchant(Enchantment.DURABILITY, 1, true);
-				ashMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-				ash.setItemMeta(ashMeta);
-				victim.getWorld().dropItemNaturally(victim.getLocation(), ash);
-			}
+			if(minutes > 0) victim.getWorld().dropItemNaturally(victim.getLocation(), new Ashes(victim.getDisplayName(), minutes, reason));
 			
 			Date duration = new Date(System.currentTimeMillis() + minutes * 60 * 1000);
 			Bukkit.getBanList(BanList.Type.NAME).addBan(victim.getDisplayName(), ChatColor.RED + reason + ChatColor.GREEN + "(for " + minutes + " minutes)", duration, null);

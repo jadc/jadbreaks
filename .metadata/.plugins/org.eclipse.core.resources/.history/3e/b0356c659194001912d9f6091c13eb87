@@ -1,0 +1,63 @@
+package me.jadc.jadbreaks.addons;
+
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.ItemStack;
+
+import me.jadc.jadbreaks.tools.Message;
+import net.md_5.bungee.api.ChatColor;
+
+public class GodPets implements Listener {
+	
+	// Makes tamed pets invulnerable
+	@EventHandler
+	public void onTame(EntityTameEvent e) {
+		e.getEntity().setInvulnerable(true);
+	}
+	
+	// Specifies owner of pet when interacted
+	@EventHandler
+	public void onInteract(PlayerInteractEntityEvent e) {
+		if(e.getRightClicked() instanceof Tameable) {
+			Tameable pet = (Tameable) e.getRightClicked();
+			if(pet.isTamed() && !(pet.getOwner().getUniqueId().equals(e.getPlayer().getUniqueId()))) {
+				Message.bar(e.getPlayer(), ChatColor.YELLOW + "I am the pet of " + pet.getOwner().getName() + ".");
+			}
+		}
+	}
+	
+	// temp
+	public ItemStack getArrowItem(Player p) {
+		// Check offhand first
+		if(p.getInventory().getItemInOffHand() != null && p.getInventory().getItemInOffHand().equals(Material.ARROW)) {
+			return p.getInventory().getItemInOffHand();
+		}else {
+			// Check inventory in order
+			for(ItemStack stack : p.getInventory().getContents()) {
+				if(stack != null && stack.getType().equals(Material.ARROW)) {
+					return stack;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	@EventHandler
+	public void onShoot(EntityShootBowEvent e) {
+		if(!(e.getEntity() instanceof Player)) return;
+		Player p = (Player) e.getEntity();
+		ItemStack arrow = getArrowItem(p);
+		if(arrow.hasItemMeta()) {
+			Message.d(arrow.getItemMeta().getDisplayName());
+		}else {
+			Message.d(arrow.getType().toString());
+		}
+	}
+}

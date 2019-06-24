@@ -1,0 +1,10 @@
+package me.jadc.jadbreaks.objects;
+
+public class Task {
+	
+	int task;
+	
+	public Task() {
+		
+	}
+}

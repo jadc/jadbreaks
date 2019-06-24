@@ -1,0 +1,23 @@
+package me.jadc.jadbreaks.addons;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+
+import me.jadc.jadbreaks.tools.Conf;
+
+public class DiamondLog implements Listener {
+	
+	@EventHandler
+	public void onMineDiamond(BlockBreakEvent e) {
+		if(e.getBlock().getType().equals(Material.DIAMOND_ORE)) {
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat date = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+			Conf.diamondLog.getConfig().set("" + date.format(cal.getTime()), e.getPlayer().getDisplayName() + " mined @");
+		}
+	}
+}

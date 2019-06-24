@@ -6,12 +6,19 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="p" key="selection"/>
+		<item value="version" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="version"/>
+			<item value="this.name = name;"/>
+			<item value="String name,"/>
+			<item value="ChatColor.stripColor(name)"/>
+			<item value="this.name = ChatColor.RESET + name"/>
+			<item value="this.name = name"/>
+			<item value="getInstance(), name"/>
 			<item value="getServer().getPluginManager()"/>
 			<item value="p"/>
 			<item value="this.getServer()"/>
@@ -20,15 +27,15 @@
 			<item value="Jetpack"/>
 			<item value="name"/>
 			<item value="cheese"/>
-			<item value="jb.getInstance()"/>
-			<item value="fuelDisplay"/>
-			<item value="loreFormat"/>
-			<item value="(double)"/>
-			<item value=" - 1"/>
-			<item value="f"/>
-			<item value="boostPlayer"/>
 		</list>
 		<list key="replacehistory">
+			<item value="this.name = name;\n"/>
+			<item value="String name, int amount,"/>
+			<item value="name"/>
+			<item value="this.name = name"/>
+			<item value="this.name = ChatColor.RESET + name"/>
+			<item value="getInstance(), ChatColor.stripColor(name).toLowerCase().replaceAll(&quot; &quot;, &quot;_&quot;)"/>
+			<item value="getInstance(), "/>
 			<item value="p"/>
 			<item value="getServer().getPluginManager()"/>
 			<item value="getServer()"/>
@@ -37,7 +44,6 @@
 			<item value="boxofblocks"/>
 			<item value="dist"/>
 			<item value="particle"/>
-			<item value="particle;"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

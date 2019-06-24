@@ -14,19 +14,26 @@ public class Conf implements Listener {
 	
 	public static ConfigFile playerData;
 	public static ConfigFile warpData;
+	public static ConfigFile diamondLog;
 	
 	public static void initializeConfigurationFiles() {
 		jb.getInstance().saveDefaultConfig();
 		playerData = new ConfigFile("players");
 		warpData = new ConfigFile("warps");
+		diamondLog = new ConfigFile("diamondlog");
 	}
 	
 	// setup player data defaults
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		String uuid = e.getPlayer().getUniqueId().toString();
+		
+		// Perks
 		if(!playerData.getConfig().contains(uuid + ".perks")) playerData.getConfig().set(uuid + ".perks", new ArrayList<String>());
-		if(!playerData.getConfig().contains(uuid + ".approved")) playerData.getConfig().set(uuid + ".approved", false);
+		
+		// Health
+		if(!playerData.getConfig().contains(uuid + ".health")) playerData.getConfig().set(uuid + ".health", 20.0);
+		
 		playerData.save();
 	}
 	

@@ -1,7 +1,9 @@
 package me.jadc.jadbreaks.tools;
 
 import org.bukkit.Color;
+import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.Sound;
@@ -17,5 +19,9 @@ public class Effects {
 	
 	public static void emitColoredParticle(Location l, int count, double x, double y, double z, int red, int green, int blue) {
 		l.getWorld().spawnParticle(Particle.REDSTONE, l, count, x, y, z, new DustOptions(Color.fromRGB(red, green, blue), 1));
+	}
+	
+	public static void emitBlockBreak(Location l, Material m) {
+		l.getWorld().playEffect(l, Effect.STEP_SOUND, m);
 	}
 }

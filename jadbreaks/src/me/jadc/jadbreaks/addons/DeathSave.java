@@ -21,13 +21,15 @@ public class DeathSave implements Listener {
 	public void onDeath(PlayerDeathEvent e) {
 		
 		// Inventory Save
-		if(Conf.instance().getBoolean("features.deathSave.keepInv")) e.setKeepInventory(true);
+		if(Conf.instance().getBoolean("features.addons.deathSave.keepInv")) e.setKeepInventory(true);
 		
 		// Hunger Save
-		if(Conf.instance().getBoolean("features.deathSave.keepHunger")) hungerMap.put(e.getEntity().getUniqueId(), e.getEntity().getFoodLevel());
+		if(Conf.instance().getBoolean("features.addons.deathSave.keepHunger")) {
+			hungerMap.put(e.getEntity().getUniqueId(), e.getEntity().getFoodLevel());
+		}
 		
 		// Exp Save
-		if(Conf.instance().getBoolean("features.deathSave.keepExp")) {
+		if(Conf.instance().getBoolean("features.addons.deathSave.keepExp")) {
 			e.setDroppedExp(0);
 			e.setKeepLevel(true);
 		}
@@ -37,7 +39,7 @@ public class DeathSave implements Listener {
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e) {
 		
-		if(!Conf.instance().getBoolean("features.deathSave.keepHealth")) {
+		if(!Conf.instance().getBoolean("features.addons.deathSave.keepHealth")) {
 			Bukkit.getScheduler().runTaskLaterAsynchronously(jb.getInstance(), new Runnable() {
 			    @Override
 			    public void run() {
@@ -46,7 +48,7 @@ public class DeathSave implements Listener {
 			}, 5);
 		}
 		
-		if(Conf.instance().getBoolean("features.deathSave.keepHunger")) {
+		if(Conf.instance().getBoolean("features.addons.deathSave.keepHunger")) {
 			Bukkit.getScheduler().runTaskLaterAsynchronously(jb.getInstance(), new Runnable() {
 			    @Override
 			    public void run() {

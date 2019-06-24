@@ -1,0 +1,23 @@
+package me.jadc.jadbreaks.objects;
+
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import me.jadc.jadbreaks.items.ArrowTNT;
+import net.md_5.bungee.api.ChatColor;
+
+public class CustomArrow extends ItemStack {
+	public CustomArrow(String name) {
+		super(Material.ARROW);
+		ItemMeta meta = getItemMeta();
+		meta.setDisplayName(ChatColor.RESET + name);
+		setItemMeta(meta);
+	}
+	
+	public static void registerArrows() {
+		ArrowTNT.registerRecipe();
+	}
+}
