@@ -1,0 +1,20 @@
+package me.jadc.jadbreaks.items;
+
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import net.md_5.bungee.api.ChatColor;
+
+public class HeartContainer extends ItemStack {
+	public HeartContainer() {
+		super(Material.APPLE);
+		ItemMeta meta = getItemMeta();
+		meta.setDisplayName(ChatColor.GOLD + "Heart Container");
+		meta.addEnchant(Enchantment.DURABILITY, 1, true);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		setItemMeta(meta);
+	}
+}

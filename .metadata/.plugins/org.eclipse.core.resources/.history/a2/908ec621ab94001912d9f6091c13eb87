@@ -1,0 +1,91 @@
+package me.jadc.jadbreaks.addons;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.inventory.ItemStack;
+
+import me.jadc.jadbreaks.objects.CustomArrow;
+import me.jadc.jadbreaks.tools.Effects;
+
+public class CustomArrowHandler implements Listener {
+	
+	public static CustomArrow arrowTNT = new CustomArrow("Arrow with TNT", Material.TNT);
+	public static CustomArrow arrowChems = new CustomArrow("Chems Arrow", Material.TNT, Material.TNT, Material.MAGMA_BLOCK, Material.MAGMA_BLOCK, Material.MAGMA_BLOCK, Material.MAGMA_BLOCK, Material.MAGMA_BLOCK, Material.MAGMA_BLOCK);
+	
+	public boolean isArrow(ItemStack s) {
+		if (s.getType().equals(Material.ARROW)) return true;
+		if (s.getType().equals(Material.TIPPED_ARROW)) return true;
+		if (s.getType().equals(Material.SPECTRAL_ARROW)) return true;
+		return false;
+	}
+
+	public ItemStack getArrowItem(Player p) {
+		// Check offhand first
+		if (p.getInventory().getItemInOffHand() != null && isArrow(p.getInventory().getItemInOffHand())) {
+			return p.getInventory().getItemInOffHand();
+		} else {
+			// Check inventory in order
+			for (ItemStack stack : p.getInventory().getContents()) {
+				if (stack != null && isArrow(stack)) {
+					return stack;
+				}
+			}
+		}
+		return null;
+	}
+
+	// Name arrow entity if itemstack has name
+	@EventHandler
+	public void onShoot(EntityShootBowEvent e) {
+		if (!(e.getEntity() instanceof Player)) return;
+		Player p = (Player) e.getEntity();
+		ItemStack arrow = getArrowItem(p);
+		if (arrow.getType().equals(Material.ARROW)) {
+			if (arrow.hasItemMeta()) {
+				if (arrow.getItemMeta().hasDisplayName()) {
+					if(arrow.getItemMeta().getDisplayName().startsWith(ChatColor.RESET + "")) {
+						e.getProjectile().setCustomName(ChatColor.stripColor(arrow.getItemMeta().getDisplayName()));
+						// temp
+						e.getProjectile().setCustomNameVisible(true);
+					}
+				}
+			}
+		}
+	}
+	
+	// ARROW BEHAVIOUR DEFINITIONS
+	@EventHandler
+	public void onArrowLand(ProjectileHitEvent e) {
+		// If custom
+		if(e.getEntity().getCustomName() == null) return;
+		//if(!e.getEntity().getCustomName().startsWith(ChatColor.RESET + "")) return;
+		
+		String name = e.getEntity().getCustomName();
+		
+		Location loc = null;
+		if(e.getHitBlock() != null) loc = e.getHitBlock().getLocation();
+		if(e.getHitEntity() != null) loc = e.getHitEntity().getLocation();
+		
+		if(name.equals(arrowTNT.getName())) {
+			loc.getWorld().createExplosion(loc, 4);
+		}
+		
+		if(name.equals(arrowChems.getName())) {
+			loc.getWorld().createExplosion(loc, 8);
+			loc.getWorld().strikeLightningEffect(loc);
+			Effects.playSound(loc, Sound.ITEM_TRIDENT_THUNDER, 2, 1);
+			Effects.emitParticle(loc, Particle.FLAME, 10000, 0, 0, 0);
+		}
+		
+		// Kill arrow
+		e.getEntity().remove();
+	}
+}

@@ -1,0 +1,35 @@
+package me.jadc.jadbreaks.addons;
+
+import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Tameable;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import me.jadc.jadbreaks.tools.Message;
+import net.md_5.bungee.api.ChatColor;
+
+public class GodPets implements Listener {
+
+	// Makes tamed pets invulnerable
+	@EventHandler
+	public void onTame(EntityTameEvent e) {
+		e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 999999999, 0, true));
+		e.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(400);
+		e.getEntity().setHealth(400);
+	}
+
+	// Specifies owner of pet when interacted
+	@EventHandler
+	public void onInteract(PlayerInteractEntityEvent e) {
+		if (e.getRightClicked() instanceof Tameable) {
+			Tameable pet = (Tameable) e.getRightClicked();
+			if (pet.isTamed() && !(pet.getOwner().getUniqueId().equals(e.getPlayer().getUniqueId()))) {
+				Message.bar(e.getPlayer(), ChatColor.YELLOW + "I am the pet of " + pet.getOwner().getName() + ".");
+			}
+		}
+	}
+}

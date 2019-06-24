@@ -1,0 +1,7 @@
+package me.jadc.jadbreaks.tools;
+
+public class RecipeHandler {
+	public static void registerRecipe() {
+		
+	}
+}

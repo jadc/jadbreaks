@@ -1,0 +1,34 @@
+package me.jadc.jadbreaks.items;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ShapelessRecipe;
+
+import me.jadc.jadbreaks.jb;
+import me.jadc.jadbreaks.objects.Perk;
+
+public class Perks {
+	public static void registerPerks() {
+		
+		// Warper
+		Bukkit.addRecipe(
+			new ShapelessRecipe(new NamespacedKey(jb.getInstance(), "PerkWarper"), new Perk("Warper", "teleportation"))
+			.addIngredient(Material.APPLE)
+			.addIngredient(Material.ENDER_EYE)
+			.addIngredient(Material.ENDER_EYE)
+			.addIngredient(Material.ENDER_EYE)
+			.addIngredient(Material.ENDER_EYE)
+		);
+		
+		// Heart Container
+		Bukkit.addRecipe(
+				new ShapelessRecipe(new NamespacedKey(jb.getInstance(), "PerkHeart"), new Perk("Health", "an additional heartpiece"))
+				.addIngredient(Material.APPLE)
+				.addIngredient(Material.ENDER_EYE)
+				.addIngredient(Material.ENDER_EYE)
+				.addIngredient(Material.ENDER_EYE)
+				.addIngredient(Material.ENDER_EYE)
+			);
+	}
+}

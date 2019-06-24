@@ -1,0 +1,19 @@
+package me.jadc.jadbreaks.items;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import net.md_5.bungee.api.ChatColor;
+
+public class Ashes extends ItemStack {
+	
+	public Ashes(String person, int duration, String reason) {
+		ItemMeta meta = getItemMeta();
+		meta.setDisplayName(ChatColor.GOLD + person + "'s Ashes");
+		List<String> lore = new ArrayList<String>();
+		lore.add(ChatColor.GRAY + "");
+	}
+}

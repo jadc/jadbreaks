@@ -25,12 +25,12 @@ public class Perk extends ItemStack implements Listener {
 	public Perk() {}
 	
 	public Perk(String name, String desc) {
-		super(Material.APPLE);
+		super(Material.GOLDEN_CARROT);
 		
 		ItemMeta meta = getItemMeta();
 		List<String> lore = new ArrayList<String>();
 		meta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + name + " Perk");
-		lore.add(ChatColor.YELLOW + "Consume this apple!");
+		lore.add(ChatColor.YELLOW + "Consume this vessel!");
 		lore.add(ChatColor.YELLOW + "Thou shall be granted with the");
 		lore.add(ChatColor.YELLOW + "power of " + desc.toLowerCase() + ".");
 		meta.setLore(lore);

@@ -1,0 +1,34 @@
+package me.jadc.jadbreaks.items;
+
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import me.jadc.jadbreaks.tools.Compare;
+import me.jadc.jadbreaks.tools.Conf;
+import net.md_5.bungee.api.ChatColor;
+
+public class HeartContainer extends ItemStack implements Listener {
+	public HeartContainer() {
+		super(Material.APPLE);
+		ItemMeta meta = getItemMeta();
+		meta.setDisplayName(ChatColor.GOLD + "Heart Container");
+		meta.addEnchant(Enchantment.DURABILITY, 1, true);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		setItemMeta(meta);
+	}
+	
+	@EventHandler
+	public void onEat(PlayerItemConsumeEvent e) {
+		if(Compare.compareName(e.getItem(), getItemMeta().getDisplayName())) {
+			double maxHealth = Conf.playerData.getConfig().getDouble(e.getPlayer().getUniqueId() + ".health");
+			Conf.playerData.getConfig().set(e.getPlayer().getUniqueId() + ".health", maxHealth + 2);
+			Conf.playerData.save();
+		}
+	}
+}

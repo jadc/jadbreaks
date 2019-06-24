@@ -14,12 +14,12 @@ public class Perks {
 		// Warper
 		Bukkit.addRecipe(
 			new ShapelessRecipe(new NamespacedKey(jb.getInstance(), "PerkWarper"), new Perk("Warper", "teleportation"))
-			.addIngredient(Material.APPLE)
+			.addIngredient(Material.GOLDEN_CARROT)
 			.addIngredient(Material.ENDER_EYE)
 			.addIngredient(Material.ENDER_EYE)
 			.addIngredient(Material.ENDER_EYE)
 			.addIngredient(Material.ENDER_EYE)
 		);
-		
 	}
+	
 }
