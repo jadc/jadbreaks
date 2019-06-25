@@ -1,0 +1,176 @@
+package me.jadc.jadbreaks.items;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import me.jadc.jadbreaks.jb;
+import me.jadc.jadbreaks.tools.Compare;
+import me.jadc.jadbreaks.tools.Conf;
+import me.jadc.jadbreaks.tools.Effects;
+import me.jadc.jadbreaks.tools.Message;
+
+public class Jetpack extends ItemStack implements Listener {
+	
+	private DecimalFormat decFormat = new DecimalFormat("0.0");	
+	private List<String> lore = new ArrayList<String>();
+	private int flySpeed = Conf.instance().getInt("features.items.jetpack.flySpeed");
+	
+	public Jetpack() {
+		super(Material.IRON_CHESTPLATE);
+		
+		// Item Meta
+		ItemMeta meta = this.getItemMeta();
+		meta.setDisplayName(ChatColor.RESET + "Jetpack");
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		meta.addEnchant(Enchantment.LOYALTY, 1, true);
+		
+		lore.add(loreFormat(0));
+		meta.setLore(lore);
+		
+		setItemMeta(meta);
+	}
+	
+	public static void registerRecipe() {
+		Bukkit.addRecipe(new ShapelessRecipe(new NamespacedKey(jb.getInstance(), "Jetpack"), new Jetpack())
+				.addIngredient(Material.IRON_CHESTPLATE)
+				.addIngredient(Material.TNT)
+				.addIngredient(Material.TNT)
+				.addIngredient(Material.IRON_BLOCK)
+				.addIngredient(Material.IRON_BLOCK)
+				.addIngredient(Material.FLINT_AND_STEEL)
+				.addIngredient(Material.FLINT_AND_STEEL)
+		);
+	}
+	
+	public String fuelDisplay(int fuel) {
+		double num = ((double)fuel - 1) / 40;
+		if(num < 0) num = 0;
+		return decFormat.format(num);
+	}
+	
+	public String loreFormat(int fuel) {
+		return ChatColor.GRAY + "Fueled with " + fuelDisplay(fuel) + " coal";
+	}
+	
+	public int getFuel(ItemStack i) {
+		return i.getEnchantmentLevel(Enchantment.LOYALTY);
+	}
+	
+	/// EVENTS ///
+	
+	// Func related to jetpack flight
+	@EventHandler
+	public void onMove(PlayerMoveEvent e) {
+		Player p = e.getPlayer();
+		if(Compare.compareName(p.getInventory().getChestplate(), getItemMeta().getDisplayName()) && (p.getGameMode() != GameMode.CREATIVE || p.getGameMode() != GameMode.SPECTATOR)) {
+			ItemStack playerJetpack = p.getInventory().getChestplate();
+    		ItemMeta meta = playerJetpack.getItemMeta();
+    		List<String> lore = meta.getLore();
+    		
+			if(p.isSneaking() && !(p.isSwimming()) && !(p.isOnGround()) && p.getLocation().getY() < 300) {
+	    		if(getFuel(playerJetpack) <= 1) return;
+	    		
+	    		meta.removeEnchant(Enchantment.LOYALTY);
+	    		meta.addEnchant(Enchantment.LOYALTY, getFuel(playerJetpack) - 1, true);
+	    		lore.set(0, loreFormat(getFuel(playerJetpack) - 1));
+	    		meta.setLore(lore);
+	    		playerJetpack.setItemMeta(meta);
+	    		
+	    		// Status
+	    		Message.bar(p, fuelDisplay(getFuel(playerJetpack)) + " coal of fuel");
+	    		
+	    		// Physics
+	    		p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 5, flySpeed, true));
+	    		
+	    		//Effects
+	    		Effects.playSound(p.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.25F, 2F);
+	    		Effects.emitParticle(p.getLocation(), Particle.CLOUD, 0, 
+	    				ThreadLocalRandom.current().nextDouble(-0.15, 0.15), 
+	    				0, 
+	    				ThreadLocalRandom.current().nextDouble(-0.15, 0.15)
+	    		);
+	    		Effects.emitParticle(p.getLocation(), Particle.SMOKE_LARGE, 0, 
+	    				ThreadLocalRandom.current().nextDouble(-0.15, 0.15), 
+	    				0, 
+	    				ThreadLocalRandom.current().nextDouble(-0.15, 0.15)
+	    		);
+	    	}else {
+	    		// Removes fall damage
+	    		if(getFuel(playerJetpack) > 1) {
+	    			if(!(p.isOnGround())) {
+	    				p.setFallDistance(p.getFallDistance() / 10);
+	    			}
+	    		}
+	    	}
+		}
+    	
+	}
+	
+	// Func related to refueling
+	@EventHandler
+	public void onInteract(PlayerInteractEvent e) {
+		if(e.getHand() == EquipmentSlot.HAND) {
+			if(e.getAction() != Action.RIGHT_CLICK_AIR) return;
+			
+			int newTicks = -1;
+			if(e.getItem().getType() == Material.COAL) newTicks = 40;
+			if(e.getItem().getType() == Material.CHARCOAL) newTicks = 40;
+			if(e.getItem().getType() == Material.COAL_BLOCK) newTicks = 400;
+			if(e.getItem().getType() == Material.LAVA_BUCKET) newTicks = 500;
+			if(newTicks == -1) return;
+			
+			if(Compare.compareName(e.getPlayer().getInventory().getChestplate(), getItemMeta().getDisplayName())) {
+				// Lore change
+				ItemStack playerJetpack = e.getPlayer().getInventory().getChestplate();
+				ItemMeta meta = playerJetpack.getItemMeta();
+				List<String> lore = meta.getLore();
+				meta.removeEnchant(Enchantment.LOYALTY);
+				meta.addEnchant(Enchantment.LOYALTY, getFuel(playerJetpack) + newTicks, true);
+				lore.set(0, loreFormat(getFuel(playerJetpack) + newTicks));
+	    		meta.setLore(lore);
+				playerJetpack.setItemMeta(meta);
+				
+				// Consumption
+				if(e.getItem().getType() == Material.LAVA_BUCKET) {
+					e.getItem().setType(Material.BUCKET);
+					e.getItem().setAmount(1);
+				}else {
+					if(e.getItem().getAmount() > 1) {
+						e.getItem().setAmount(e.getItem().getAmount() - 1);
+					}else {
+						e.getItem().setAmount(0);
+					}
+				}
+				
+				// Effects/Status
+				Message.bar(e.getPlayer(), ChatColor.GREEN + "+" + (newTicks / 40) + " " + ChatColor.RESET + fuelDisplay(getFuel(playerJetpack)) + " coal");
+				Effects.playSound(e.getPlayer().getLocation(), Sound.BLOCK_PISTON_CONTRACT, 0.5F, 1.0F);
+			}
+		}
+	}
+}

@@ -22,7 +22,7 @@ public class InstaSleep implements Listener {
 		World w = e.getPlayer().getWorld();
 		
 		p.setBedSpawnLocation(p.getLocation(), true);
-		Message.bar(e.getPlayer(), "Spawn set to " + p.getBedSpawnLocation().getBlockX() + ", " + p.getBedSpawnLocation().getBlockY() + ", " + p.getBedSpawnLocation().getBlockZ());
+		Message.bar(e.getPlayer(), "Spawn set to " + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ());
 		
 		// Clear weather
 		w.setStorm(false);
@@ -39,14 +39,14 @@ public class InstaSleep implements Listener {
 					@Override
 					public void run() {
 						if(w.getTime() > 12000) { 
-							w.setTime(w.getTime() + 10);
+							w.setTime(w.getTime() + 1000);
 						}else {
 							Bukkit.getServer().getScheduler().cancelTask(sleepTask);
 							sleepTask = 0;
 						}
 					}
 					
-				}, 0, 1L).getTaskId();
+				}, 0, 100L).getTaskId();
 			}
 		}
 	}

@@ -57,7 +57,7 @@
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="java.time.Duration"/>
 <fullyQualifiedTypeName name="org.bukkit.event.Listener"/>
-<fullyQualifiedTypeName name="org.bukkit.Location"/>
 <fullyQualifiedTypeName name="net.md_5.bungee.api.ChatColor"/>
 <fullyQualifiedTypeName name="me.jadc.jadbreaks.tools.Message"/>
+<fullyQualifiedTypeName name="org.bukkit.Location"/>
 </qualifiedTypeNameHistroy>

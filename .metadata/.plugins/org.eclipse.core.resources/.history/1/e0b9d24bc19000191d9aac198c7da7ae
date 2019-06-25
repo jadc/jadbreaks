@@ -1,7 +1,0 @@
-package me.jadc.jadbreaks.addons;
-
-import org.bukkit.event.Listener;
-
-public class ChangelogNotification implements Listener {
-	
-}

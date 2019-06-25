@@ -1,0 +1,14 @@
+main: me.jadc.jadbreaks.jb
+author: jadc
+version: 1.0.0
+name: jadbreaks
+api-version: 1.14
+commands:
+  jihad:
+  rr:
+  bob:
+  tempban:
+  jb:
+  raw:
+  warp:
+  log:

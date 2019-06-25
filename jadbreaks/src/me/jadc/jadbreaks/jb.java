@@ -85,7 +85,7 @@ public class jb extends JavaPlugin {
 		}
 		
 		// Custom Arrows
-		if(Conf.instance().getBoolean("features.addons.customarrows")){
+		if(Conf.instance().getBoolean("features.addons.customArrows")){
 			p.registerEvents(new CustomArrowHandler(), this);
 		}
 		

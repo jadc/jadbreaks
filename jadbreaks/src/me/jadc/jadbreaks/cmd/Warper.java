@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -23,80 +24,95 @@ import me.jadc.jadbreaks.tools.Message;
 import net.md_5.bungee.api.ChatColor;
 
 public class Warper implements CommandExecutor, Listener {
-	
+
 	int count = 50;
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		
-		if(!(sender instanceof Player)) return true;
-		
+
+		if (!(sender instanceof Player))
+			return true;
+
 		Player p = (Player) sender;
-		
-		if(!Perk.hasPerk(p, "Warper")) {
+
+		if (!Perk.hasPerk(p, "Warper")) {
 			Message.noPerk(p);
 			return true;
 		}
-		
-		if(Conf.playerData.getConfig().contains(p.getUniqueId() + ".lastDamaged")) {
+
+		if (Conf.playerData.getConfig().contains(p.getUniqueId() + ".lastDamaged")) {
 			Instant before = Instant.parse(Conf.playerData.getConfig().getString(p.getUniqueId() + ".lastDamaged"));
 			Instant after = Instant.now();
-			if(Duration.between(before, after).toMillis() <= 60000) {
-				p.sendMessage(ChatColor.RED + "You have taken damage too recently to warp.");
-				p.sendMessage(ChatColor.RED + "Wait " + ((60000 - Duration.between(before, after).toMillis()) / 1000) + " more seconds.");
+			if (Duration.between(before, after).toMillis() <= 60000) {
+				p.sendMessage(ChatColor.RED + "You have taken damage too recently to warp. (" + ((60000 - Duration.between(before, after).toMillis()) / 1000) + "s)");
 				return true;
 			}
 		}
-		
-		if(args.length <= 1 || args.length > 2) {
-			Message.invalidArgs(p, "/warp " + ChatColor.UNDERLINE + "<set/to> <name>");
+
+		if (args.length != 2) {
+			Message.invalidArgs(p, "/warp " + ChatColor.UNDERLINE + "<set/to/del> <name>");
+			return true;
+		}
+
+		// Place name
+		String name = args[1].toLowerCase();
+
+		if(args[0].equalsIgnoreCase("set")) {
+			// Setting warp
+			Conf.warpData.getConfig().set(name + ".owner", p.getUniqueId().toString());
+			Conf.warpData.getConfig().set(name + ".location", p.getLocation());
+			Conf.warpData.save();
+			p.sendMessage("Set warp \"" + name + "\" to " + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ());
 			return true;
 		}
 		
-		if(args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("to")) {
-			boolean isSetting = (args[0].equalsIgnoreCase("set") ? true : false);
-			
-			// Place name
-			String name = args[1].toLowerCase();
-			
-			if(isSetting) {
-				// Setting warp
-				Conf.warpData.getConfig().set(name, p.getLocation());
-				Conf.warpData.save();
-				p.sendMessage("Set warp \"" + name + "\" to " + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ());
-			}else {
-				
-				if(!Conf.warpData.getConfig().contains(name)) {
-					Message.error(p, "Invalid warp");
-					return true;
-				}
-				
-				// Teleporting to warp
-				Location warpLoc = (Location) Conf.warpData.getConfig().get(name);
-				
-				// Effects and Teleport
-				p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, 255, true));
-				Effects.emitColoredParticle(p.getLocation(), count, 0.2, 0.8, 0.2, 255, 0, 255);
-				Effects.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
-				if(Math.random() < 0.05) p.getWorld().spawnEntity(p.getLocation(), EntityType.ENDERMITE);
-				p.teleport(warpLoc);
-				p.sendMessage("You have arrived at " + name + "...");
-				Effects.emitColoredParticle(p.getLocation(), count, 0.2, 0.8, 0.2, 255, 0, 255);
-				Effects.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+		if(args[0].equalsIgnoreCase("to")) {
+			// Warping to
+			if(!Conf.warpData.getConfig().contains(name)) {
+				Message.error(p, "Invalid warp");
+				return true;
 			}
-		}else {
-			Message.invalidArgs(p, "/warp " + ChatColor.UNDERLINE + "<set/to>" + ChatColor.RESET + ChatColor.RED + " <name>");
+
+			// Teleporting to warp
+			Location warpLoc = (Location) Conf.warpData.getConfig().get(name + ".location");
+
+			// Effects and Teleport
+			p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, 255, true));
+			Effects.emitColoredParticle(p.getLocation(), count, 0.2, 0.8, 0.2, 255, 0, 255);
+			Effects.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+			if (Math.random() < 0.05) p.getWorld().spawnEntity(p.getLocation(), EntityType.ENDERMITE);
+			p.teleport(warpLoc);
+			p.sendMessage("You have arrived at " + name + "...");
+			Effects.emitColoredParticle(p.getLocation(), count, 0.2, 0.8, 0.2, 255, 0, 255);
+			Effects.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 			return true;
 		}
 		
+		if(args[0].equalsIgnoreCase("del") || args[0].equalsIgnoreCase("delete")) {
+			// Deleting warp
+			if(Conf.warpData.getConfig().getString(name + ".owner").equals(p.getUniqueId().toString())) {
+				// Is owner of warp
+				Conf.warpData.getConfig().set(name, null);
+				Conf.warpData.save();
+				p.sendMessage("The warp has been deleted.");
+				return true;
+			}else {
+				Message.error(p, "Invalid warp, or you do not own it");
+				return true;
+			}
+		}
+
 		return true;
 	}
-	
+
 	// Last damage event
 	@EventHandler
 	public void onPlayerDamage(EntityDamageEvent e) {
-		if(e.getEntity() instanceof Player) {
+		if (e.getEntity() instanceof Player) {
 			Player p = (Player) e.getEntity();
+			
+			if(e.getCause().equals(DamageCause.FALL)) return;
+			
 			Conf.playerData.getConfig().set(p.getUniqueId() + ".lastDamaged", Instant.now().toString());
 			Conf.playerData.save();
 		}
