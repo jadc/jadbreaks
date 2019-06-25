@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 import me.jadc.jadbreaks.tools.Conf;
 import me.jadc.jadbreaks.tools.Message;
@@ -84,5 +86,11 @@ public class Log implements Listener, CommandExecutor {
 		if(e.getBlock().getType().equals(Material.DIAMOND_ORE)) {
 			logToFile(e.getPlayer().getDisplayName() + " mined diamond at " + e.getBlock().getX()+ ", " + e.getBlock().getY() + ", " + e.getBlock().getZ());
 		}
+	}
+	
+	@EventHandler
+	public void onDeath(PlayerDeathEvent e) {
+		Location loc = e.getEntity().getLocation();
+		logToFile(e.getEntity().getDisplayName() + " died at " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
 	}
 }

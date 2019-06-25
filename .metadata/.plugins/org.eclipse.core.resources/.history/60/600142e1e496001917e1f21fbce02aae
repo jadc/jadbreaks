@@ -1,0 +1,7 @@
+package me.jadc.jadbreaks.cmd;
+
+import org.bukkit.command.CommandExecutor;
+
+public class TPS implements CommandExecutor {
+
+}

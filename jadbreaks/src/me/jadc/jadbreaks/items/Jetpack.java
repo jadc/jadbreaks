@@ -37,7 +37,6 @@ public class Jetpack extends ItemStack implements Listener {
 	
 	private DecimalFormat decFormat = new DecimalFormat("0.0");	
 	private List<String> lore = new ArrayList<String>();
-	private int flyTickPerCoal = Conf.instance().getInt("features.items.jetpack.flyTickPerCoal");
 	private int flySpeed = Conf.instance().getInt("features.items.jetpack.flySpeed");
 	
 	public Jetpack() {
@@ -69,7 +68,7 @@ public class Jetpack extends ItemStack implements Listener {
 	}
 	
 	public String fuelDisplay(int fuel) {
-		double num = ((double)fuel - 1) / flyTickPerCoal;
+		double num = ((double)fuel - 1) / 40;
 		if(num < 0) num = 0;
 		return decFormat.format(num);
 	}
@@ -124,7 +123,7 @@ public class Jetpack extends ItemStack implements Listener {
 	    		// Removes fall damage
 	    		if(getFuel(playerJetpack) > 1) {
 	    			if(!(p.isOnGround())) {
-	    				p.setFallDistance(0F);
+	    				p.setFallDistance(p.getFallDistance() * 0.75F);
 	    			}
 	    		}
 	    	}
@@ -135,9 +134,15 @@ public class Jetpack extends ItemStack implements Listener {
 	// Func related to refueling
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
-		if(e.getHand() == EquipmentSlot.HAND) { // RAN TWICE. FIX THIS
+		if(e.getHand() == EquipmentSlot.HAND) {
 			if(e.getAction() != Action.RIGHT_CLICK_AIR) return;
-			if(e.getItem().getType() != Material.COAL) return;
+			
+			int newTicks = -1;
+			if(e.getItem().getType() == Material.COAL) newTicks = 40;
+			if(e.getItem().getType() == Material.CHARCOAL) newTicks = 40;
+			if(e.getItem().getType() == Material.COAL_BLOCK) newTicks = 400;
+			if(e.getItem().getType() == Material.LAVA_BUCKET) newTicks = 500;
+			if(newTicks == -1) return;
 			
 			if(Compare.compareName(e.getPlayer().getInventory().getChestplate(), getItemMeta().getDisplayName())) {
 				// Lore change
@@ -145,21 +150,26 @@ public class Jetpack extends ItemStack implements Listener {
 				ItemMeta meta = playerJetpack.getItemMeta();
 				List<String> lore = meta.getLore();
 				meta.removeEnchant(Enchantment.LOYALTY);
-				meta.addEnchant(Enchantment.LOYALTY, getFuel(playerJetpack) + flyTickPerCoal, true);
-				lore.set(0, loreFormat(getFuel(playerJetpack) + flyTickPerCoal));
+				meta.addEnchant(Enchantment.LOYALTY, getFuel(playerJetpack) + newTicks, true);
+				lore.set(0, loreFormat(getFuel(playerJetpack) + newTicks));
 	    		meta.setLore(lore);
 				playerJetpack.setItemMeta(meta);
 				
 				// Consumption
-				if(e.getItem().getAmount() > 1) {
-					e.getItem().setAmount(e.getItem().getAmount() - 1);
+				if(e.getItem().getType() == Material.LAVA_BUCKET) {
+					e.getItem().setType(Material.BUCKET);
+					e.getItem().setAmount(1);
 				}else {
-					e.getItem().setAmount(0);
+					if(e.getItem().getAmount() > 1) {
+						e.getItem().setAmount(e.getItem().getAmount() - 1);
+					}else {
+						e.getItem().setAmount(0);
+					}
 				}
 				
 				// Effects/Status
-				Message.bar(e.getPlayer(), ChatColor.GREEN + "+1" + ChatColor.RESET + " " + fuelDisplay(getFuel(playerJetpack)) + " coal");
-				Effects.playSound(e.getPlayer().getLocation(), Sound.ENTITY_PLAYER_BURP, 0.5F, 1.0F);
+				Message.bar(e.getPlayer(), ChatColor.GREEN + "+" + (newTicks / 40) + " " + ChatColor.RESET + fuelDisplay(getFuel(playerJetpack)) + " coal");
+				Effects.playSound(e.getPlayer().getLocation(), Sound.BLOCK_PISTON_CONTRACT, 0.25F, 1.0F);
 			}
 		}
 	}

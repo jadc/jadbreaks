@@ -5,7 +5,7 @@ features:
       blacklist: 
     deathSave: 
       keepInv: false
-      keepHealth: false
+      keepHealth: true
       keepHunger: true
       keepExp: true
       tellCoords: true
@@ -14,11 +14,10 @@ features:
     xpDropAlways: true
     godPets: true
     perks: false
-    customarrows: false
+    customArrows: false
   items:
     jetpack:
       enabled: true
-      flyTickPerCoal: 40
       flySpeed: 15
     theBoof:
       enabled: false
