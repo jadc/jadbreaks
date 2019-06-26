@@ -4,7 +4,7 @@ features:
       enabled: false
       blacklist: 
     deathSave: 
-      keepInvIfPvP: false
+      keepInv: false
       keepHealth: true
       keepHunger: true
       keepExp: true

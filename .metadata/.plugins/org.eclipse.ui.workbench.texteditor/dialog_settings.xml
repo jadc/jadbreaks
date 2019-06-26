@@ -12,6 +12,7 @@
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="html"/>
 			<item value="features.deathSave"/>
 			<item value="version"/>
 			<item value="this.name = name;"/>
@@ -26,7 +27,6 @@
 			<item value="Conf"/>
 			<item value="jb.instance"/>
 			<item value="Jetpack"/>
-			<item value="name"/>
 		</list>
 		<list key="replacehistory">
 			<item value="features.addons.deathSave"/>

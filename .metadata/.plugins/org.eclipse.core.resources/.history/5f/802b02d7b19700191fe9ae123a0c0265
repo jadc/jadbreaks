@@ -9,6 +9,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
@@ -22,11 +23,6 @@ public class DeathSave implements Listener {
 	
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
-		
-		// Inventory Save if PvP
-		if(e.getEntity().getKiller() instanceof Player) {
-			e.setKeepInventory(Conf.instance().getBoolean("features.addons.deathSave.keepInvIfPvP"));
-		}
 		
 		// Hunger Save
 		if(Conf.instance().getBoolean("features.addons.deathSave.keepHunger")) {
@@ -44,6 +40,13 @@ public class DeathSave implements Listener {
 			Location loc = e.getEntity().getLocation();
 			e.getEntity().sendMessage("You died at " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ() + " in " + loc.getWorld().getName());
 			Message.log(e.getEntity().getDisplayName() + " died at " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
+		}
+	}
+	
+	@EventHandler
+	public void onEntityDeath(EntityDeathEvent e) {
+		if(e instanceof Player) {
+			Player p = ((Player) e).getPlayer();
 		}
 	}
 	

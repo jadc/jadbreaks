@@ -23,9 +23,15 @@ public class DeathSave implements Listener {
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		
-		// Inventory Save if PvP
-		if(e.getEntity().getKiller() instanceof Player) {
-			e.setKeepInventory(Conf.instance().getBoolean("features.addons.deathSave.keepInvIfPvP"));
+		// Inventory Save
+		if(Conf.instance().getBoolean("features.addons.deathSave.keepInv")) {
+			if(e.getEntity().getKiller() instanceof Player) {
+				
+			}
+			if(Conf.instance().getBoolean("features.addons.deathSave.keepInv.onlyPvP")) {
+				
+			}
+			e.setKeepInventory(true);
 		}
 		
 		// Hunger Save

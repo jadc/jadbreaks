@@ -1,9 +1,0 @@
-package me.jadc.jadbreaks.perks;
-
-import org.bukkit.entity.Player;
-
-public class PerkManager {
-	public void initPerks(Player p) {
-		
-	}
-}
