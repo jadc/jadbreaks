@@ -1,7 +1,0 @@
-package me.jadc.jadbreaks.objects;
-
-public class ConfigFile {
-	public ConfigFile() {
-		
-	}
-}

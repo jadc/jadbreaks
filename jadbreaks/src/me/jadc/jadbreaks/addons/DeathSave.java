@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -22,8 +23,10 @@ public class DeathSave implements Listener {
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		
-		// Inventory Save
-		if(Conf.instance().getBoolean("features.addons.deathSave.keepInv")) e.setKeepInventory(true);
+		// Inventory Save if PvP
+		if(e.getEntity().getKiller() instanceof Player) {
+			e.setKeepInventory(Conf.instance().getBoolean("features.addons.deathSave.keepInvIfPvP"));
+		}
 		
 		// Hunger Save
 		if(Conf.instance().getBoolean("features.addons.deathSave.keepHunger")) {
