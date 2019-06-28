@@ -1,0 +1,14 @@
+package me.jadc.jadbreaks.items;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ShapelessRecipe;
+
+import me.jadc.jadbreaks.jb;
+import me.jadc.jadbreaks.objects.Perk;
+
+public class Perks {
+	
+	
+}

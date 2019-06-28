@@ -1,0 +1,7 @@
+package me.jadc.jadbreaks.objects;
+
+import org.bukkit.event.Listener;
+
+public class CustomDisc implements Listener {
+	
+}

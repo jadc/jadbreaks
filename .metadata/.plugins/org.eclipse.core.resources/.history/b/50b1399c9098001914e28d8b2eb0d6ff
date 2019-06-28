@@ -1,0 +1,32 @@
+package me.jadc.jadbreaks.addons;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+
+import me.jadc.jadbreaks.objects.SimpleLocation;
+import me.jadc.jadbreaks.tools.Conf;
+
+public class DeathLocationAid implements Listener {
+	@EventHandler
+	public void onDeath(PlayerDeathEvent e) {
+		Player p = e.getEntity();
+		Location loc = e.getEntity().getLocation();
+		
+		Conf.playerData.getConfig().set(p.getUniqueId() + ".lastDeath", new SimpleLocation(loc));
+		Conf.playerData.save();
+	}
+	
+	@EventHandler
+	public void onRespawn(PlayerRespawnEvent e) {
+		//Location loc = ((SimpleLocation) Conf.playerData.getConfig().get(e.getPlayer() + ".lastDeath")).getLocation();
+		Location loc = SimpleLocation.parseFormatted(Conf.playerData.getConfig().getString(e.getPlayer() + ".lastDeath"));
+		if(loc == null) return;
+		
+		e.getPlayer().sendBlockChange(loc, Material.END_ROD.createBlockData());
+	}
+}

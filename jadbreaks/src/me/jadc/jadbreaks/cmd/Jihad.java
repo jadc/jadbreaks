@@ -1,10 +1,13 @@
 package me.jadc.jadbreaks.cmd;
 
+import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.jadc.jadbreaks.tools.Effects;
 import me.jadc.jadbreaks.tools.Message;
 
 public class Jihad implements CommandExecutor {
@@ -15,10 +18,11 @@ public class Jihad implements CommandExecutor {
 		if(cmd.getName().equalsIgnoreCase("jihad")) {
 			if(sender instanceof Player) {
 				Player p = (Player) sender;
-				
-				p.getWorld().createExplosion(p.getLocation(), 0.0F);
-				p.setHealth(0.0D);
-				
+
+				p.setHealth(1.0D);
+				p.getWorld().createExplosion(p.getLocation().getX(), p.getLocation().getY() + (p.getHeight() / 2), p.getLocation().getZ(), 2.0F, false, false);
+				Effects.emitBlockBreak(p.getEyeLocation(), Material.TNT);
+				Effects.emitParticle(p.getLocation(), Particle.LAVA, 25, 0, p.getHeight() / 2, 0);
 			}else {
 				Message.error(sender, "Ingame players only");
 			}

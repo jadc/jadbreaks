@@ -1,0 +1,28 @@
+features:
+  addons:
+    boxOfBlocks: 
+      enabled: false
+      blacklist: 
+    deathSave: 
+      keepInvIfPvP: false
+      keepHealth: true
+      keepHunger: true
+      keepExp: true
+    chatPing: true
+    instaSleep: true
+    xpDropAlways: true
+    godPets: true
+    perks: false
+    customArrows: false
+    musicDiscs: false
+  items:
+    jetpack:
+      enabled: true
+      flySpeed: 15
+    theBoof:
+      enabled: false
+    pStone:
+      enabled: false
+  autoRestart:
+    enabled: true
+    hourInterval: 4

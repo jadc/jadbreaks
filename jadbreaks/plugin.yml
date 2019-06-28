@@ -11,4 +11,7 @@ commands:
   jb:
   raw:
   warp:
-  log:
+  died:
+permissions:
+  jadbreaks.mod:
+    default: op

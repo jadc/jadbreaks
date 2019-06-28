@@ -11,10 +11,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.jadc.jadbreaks.addons.ChangelogNotification;
 import me.jadc.jadbreaks.addons.ChatPing;
 import me.jadc.jadbreaks.addons.CustomArrowHandler;
+import me.jadc.jadbreaks.addons.DeathLocationAid;
 import me.jadc.jadbreaks.addons.DeathSave;
 import me.jadc.jadbreaks.addons.GodPets;
 import me.jadc.jadbreaks.addons.InstaSleep;
 import me.jadc.jadbreaks.addons.Log;
+import me.jadc.jadbreaks.addons.ServerListManager;
 import me.jadc.jadbreaks.addons.XPDropAlways;
 import me.jadc.jadbreaks.cmd.BoxOfBlocks;
 import me.jadc.jadbreaks.cmd.Info;
@@ -26,8 +28,8 @@ import me.jadc.jadbreaks.cmd.Warper;
 import me.jadc.jadbreaks.items.Boof;
 import me.jadc.jadbreaks.items.HeartContainer;
 import me.jadc.jadbreaks.items.Jetpack;
-import me.jadc.jadbreaks.items.Perks;
 import me.jadc.jadbreaks.items.PhilosophersStone;
+import me.jadc.jadbreaks.objects.Disc;
 import me.jadc.jadbreaks.objects.Perk;
 import me.jadc.jadbreaks.tools.Conf;
 import net.md_5.bungee.api.ChatColor;
@@ -48,7 +50,6 @@ public class jb extends JavaPlugin {
 		
 		// Plugin inits
 		pluginInitialization();
-		Perks.registerPerks();
 	}
 	
 	public static jb getInstance() {
@@ -57,12 +58,15 @@ public class jb extends JavaPlugin {
 	
 	private void pluginInitialization() {
 		// Event Listeners
+		p.registerEvents(new ServerListManager(), this);
 		p.registerEvents(new Conf(), this);
 		p.registerEvents(new ChangelogNotification(), this);
 		p.registerEvents(new TempBan(), this);
 		p.registerEvents(new Log(), this);
 		p.registerEvents(new DeathSave(), this);
 		p.registerEvents(new HeartContainer(), this);
+		p.registerEvents(new DeathLocationAid(), this);
+		if(Conf.instance().getBoolean("features.addons.musicDiscs")) p.registerEvents(new Disc(), this);
 		if(Conf.instance().getBoolean("features.addons.instaSleep")) p.registerEvents(new InstaSleep(), this);
 		if(Conf.instance().getBoolean("features.addons.xpDropAlways")) p.registerEvents(new XPDropAlways(), this);
 		if(Conf.instance().getBoolean("features.addons.chatPing")) p.registerEvents(new ChatPing(), this);
@@ -74,11 +78,12 @@ public class jb extends JavaPlugin {
 		getCommand("rr").setExecutor(new Reload());
 		getCommand("tempban").setExecutor(new TempBan());
 		getCommand("raw").setExecutor(new Raw());
-		getCommand("log").setExecutor(new Log());
+		getCommand("died").setExecutor(new DeathLocationAid());
 		
 		// Perks
 		if(Conf.instance().getBoolean("features.addons.perks")) {
 			p.registerEvents(new Perk(), this);
+			Perk.registerPerks();
 			
 			p.registerEvents(new Warper(), this);
 			getCommand("warp").setExecutor(new Warper());
