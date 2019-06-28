@@ -24,7 +24,7 @@ public class TempBan implements CommandExecutor, Listener {
 		
 		if(cmd.getName().equalsIgnoreCase("tempban")){
 			
-			if(!sender.isOp()) {
+			if(!sender.hasPermission("jadbreaks.mod")) {
 				Message.noPerms(sender);
 				return true;
 			}

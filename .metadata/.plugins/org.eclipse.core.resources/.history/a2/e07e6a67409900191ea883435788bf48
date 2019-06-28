@@ -1,0 +1,23 @@
+package me.jadc.jadbreaks.objects;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.Material;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import net.md_5.bungee.api.ChatColor;
+
+public class CustomDisc extends ItemStack implements Listener {
+	public CustomDisc(String fileName, String artist, String name) {
+		super(Material.MUSIC_DISC_STRAD);
+		ItemMeta meta = getItemMeta();
+		List<String> lore = new ArrayList<String>();
+		lore.add(ChatColor.GRAY + name + " - " + artist);
+		meta.setDisplayName(ChatColor.AQUA + "Music Disc");
+		meta.setLore(lore);
+		setItemMeta(meta);
+	}
+}

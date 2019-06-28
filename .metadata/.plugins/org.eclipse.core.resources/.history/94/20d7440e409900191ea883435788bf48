@@ -1,0 +1,10 @@
+package me.jadc.jadbreaks.objects;
+
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+
+public class CustomDisc extends ItemStack implements Listener {
+	public CustomDisc() {
+		super(Material.DISC)
+	}
+}

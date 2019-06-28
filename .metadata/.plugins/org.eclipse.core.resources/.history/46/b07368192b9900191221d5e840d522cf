@@ -1,0 +1,40 @@
+package me.jadc.jadbreaks.addons;
+
+import java.lang.management.ManagementFactory;
+import java.text.DecimalFormat;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerListPingEvent;
+
+import io.netty.util.internal.ThreadLocalRandom;
+import me.jadc.jadbreaks.tools.TPSFetcher;
+
+public class ServerListManager implements Listener {
+	
+	private DecimalFormat numFormat = new DecimalFormat("#0.0");	
+	
+	@EventHandler
+	public void onListRequest(ServerListPingEvent e) {
+		char[] codes = new char[]{'3', '5', '6', '7', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+		ChatColor color = ChatColor.getByChar(codes[ThreadLocalRandom.current().nextInt(0, codes.length)]);
+		String version = Bukkit.getServer().getVersion().substring(Bukkit.getServer().getVersion().lastIndexOf(" ") + 1).replaceFirst(".$", "");
+		String uptime = numFormat.format((double)(336000000L / 3600000L));
+		//ManagementFactory.getRuntimeMXBean().getUptime()
+		String line1 = "jad's mc server for " + version;
+		String line1Space = "";
+		for(int i = 0; i < line1.length() / 1.7; i++) { line1Space += " "; }
+		String line2 = TPSFetcher.getTPSColor() + numFormat.format(TPSFetcher.getTPS()) + ChatColor.DARK_GRAY + " TPS    " + ChatColor.GRAY + uptime + ChatColor.DARK_GRAY + " hr";
+		String line2Space = "";
+		for(int i = 0; i < line2.length() / 1.3; i++) { line2Space += " "; }
+		e.setMotd(
+				color + 
+				line1Space + line1
+				+ "\n"
+				+ line2Space + line2
+				);
+		e.setMaxPlayers(0);
+	}
+}

@@ -1,0 +1,37 @@
+package me.jadc.jadbreaks.objects;
+
+import org.bukkit.Location;
+import org.bukkit.World;
+
+public class SimpleLocation {
+	
+	World world;
+	int x,y,z;
+	
+	public SimpleLocation(Location loc) {
+		world = loc.getWorld();
+		x = loc.getBlockX();
+		y = loc.getBlockY();
+		z = loc.getBlockZ();
+	}
+	
+	public Location getLocation() {
+		return new Location();
+	}
+	
+	public World getWorld() {
+		return world;
+	}
+	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return x;
+	}
+	
+	public int getZ() {
+		return x;
+	}
+}

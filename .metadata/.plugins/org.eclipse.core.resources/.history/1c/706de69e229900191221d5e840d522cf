@@ -1,0 +1,15 @@
+package me.jadc.jadbreaks.tools;
+
+import net.minecraft.server.v1_14_R1.MinecraftServer;
+
+@SuppressWarnings("deprecation")
+public class TPSFetcher {
+	public static double getTPS() {
+		return MinecraftServer.getServer().recentTps[0];
+	}
+	
+	public static String getTPSColored() {
+		double tps = MinecraftServer.getServer().recentTps[0];
+		return "20.0";
+	}
+}

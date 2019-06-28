@@ -1,0 +1,36 @@
+package me.jadc.jadbreaks.addons;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+
+import me.jadc.jadbreaks.tools.Conf;
+
+public class DeathLocationAid implements Listener {
+	@EventHandler
+	public void onDeath(PlayerDeathEvent e) {
+		Player p = e.getEntity();
+		Location loc = e.getEntity().getLocation();
+		
+		Conf.playerData.getConfig().set(p.getUniqueId() + ".lastDeath", loc);
+		Conf.playerData.save();
+	}
+	
+	@EventHandler
+	public void onRespawn(PlayerRespawnEvent e) {
+		Location loc = (Location) Conf.playerData.getConfig().get(e.getPlayer().getUniqueId() + ".lastDeath");
+		if(loc == null) return;
+		
+		
+		
+		/*Bukkit.getScheduler().runTaskLaterAsynchronously(jb.getInstance(), new Runnable() {
+		    @Override
+		    public void run() {
+		    	
+		    }
+		}, 5);*/
+	}
+}

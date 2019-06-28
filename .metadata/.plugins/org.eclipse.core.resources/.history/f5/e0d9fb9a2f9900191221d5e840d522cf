@@ -1,0 +1,96 @@
+package me.jadc.jadbreaks.addons;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+
+import me.jadc.jadbreaks.tools.Conf;
+import me.jadc.jadbreaks.tools.Message;
+import net.md_5.bungee.api.ChatColor;
+
+public class Log implements Listener, CommandExecutor {
+	
+	public static void logToFile(String l) {
+		List<String> log;
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		
+		if(Conf.log.getConfig().getList("log") != null) {
+			log = Conf.log.getConfig().getStringList("log");
+		}else {
+			log = new ArrayList<String>();
+		}
+		
+		log.add(date.format(cal.getTime()) + " --> " + l);
+		
+		Conf.log.getConfig().set("log", log);
+		Conf.log.save();
+	}
+	
+	// Log command
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		
+		if(cmd.getName().equalsIgnoreCase("log")){
+			
+			int query = 3;
+			
+			if(!sender.isOp()) {
+				Message.noPerms(sender);
+				return true;
+			}
+			
+			if(args.length < 0 || args.length > 1) {
+				Message.invalidArgs(sender, "/log <# of entries>");
+				return true;
+			}
+			
+			if(args.length > 0) {
+				try{
+				    query = Integer.parseInt(args[0]);
+				}catch (NumberFormatException ex) {
+				    Message.invalidArgs(sender, "Integers for entry query only.");
+				    return true;
+				}
+			}
+			
+			List<String> log = Conf.log.getConfig().getStringList("log");
+			
+			if(query > log.size()) query = log.size();
+			
+			sender.sendMessage("");
+			sender.sendMessage(ChatColor.DARK_AQUA + " Generic Log");
+			for(int i = 0; i < query; i++) {
+				sender.sendMessage(" " + ChatColor.AQUA + log.get(log.size() - (i + 1)));
+			}
+		}
+		
+		return true;
+	}
+	
+	
+	// LOGGING EVENTS
+	@EventHandler
+	public void onMineDiamond(BlockBreakEvent e) {
+		if(e.getBlock().getType().equals(Material.DIAMOND_ORE)) {
+			logToFile(e.getPlayer().getDisplayName() + " mined diamond at " + e.getBlock().getX()+ ", " + e.getBlock().getY() + ", " + e.getBlock().getZ());
+		}
+	}
+	
+	@EventHandler
+	public void onDeath(PlayerDeathEvent e) {
+		Location loc = e.getEntity().getLocation();
+		logToFile(e.getEntity().getDisplayName() + " died at " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
+	}
+}

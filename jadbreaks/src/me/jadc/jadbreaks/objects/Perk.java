@@ -3,7 +3,9 @@ package me.jadc.jadbreaks.objects;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -12,10 +14,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import me.jadc.jadbreaks.jb;
 import me.jadc.jadbreaks.tools.Conf;
 import me.jadc.jadbreaks.tools.Effects;
 import net.md_5.bungee.api.ChatColor;
@@ -24,8 +28,18 @@ public class Perk extends ItemStack implements Listener {
 	
 	public Perk() {}
 	
+	public static void registerPerks() {
+		// Warper
+		Bukkit.addRecipe(
+			new ShapelessRecipe(new NamespacedKey(jb.getInstance(), "PerkWarper"), new Perk("Warper", "teleportation"))
+			.addIngredient(Material.SPIDER_EYE)
+			.addIngredient(Material.ENDER_EYE)
+			.addIngredient(Material.ENDER_EYE)
+		);
+	}
+	
 	public Perk(String name, String desc) {
-		super(Material.GOLDEN_CARROT);
+		super(Material.SPIDER_EYE);
 		
 		ItemMeta meta = getItemMeta();
 		List<String> lore = new ArrayList<String>();
@@ -47,7 +61,7 @@ public class Perk extends ItemStack implements Listener {
 		if(e.getItem().getItemMeta() == null) return;
 		if(!e.getItem().getItemMeta().hasLore()) return;
 		if(e.getItem().getItemMeta().getLore() == null) return;
-		if(e.getItem().getType().equals(Material.GOLDEN_CARROT)) {
+		if(e.getItem().getType().equals(Material.SPIDER_EYE)) {
 			
 			e.setCancelled(true);
 			

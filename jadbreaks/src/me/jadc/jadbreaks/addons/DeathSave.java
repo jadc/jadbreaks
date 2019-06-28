@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,7 +13,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 import me.jadc.jadbreaks.jb;
 import me.jadc.jadbreaks.tools.Conf;
-import me.jadc.jadbreaks.tools.Message;
 
 public class DeathSave implements Listener {
 	
@@ -38,19 +36,12 @@ public class DeathSave implements Listener {
 			e.setDroppedExp(0);
 			e.setKeepLevel(true);
 		}
-		
-		// Coordinate Help
-		if(Conf.instance().getBoolean("features.addons.deathSave.tellCoords")) {
-			Location loc = e.getEntity().getLocation();
-			e.getEntity().sendMessage("You died at " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ() + " in " + loc.getWorld().getName());
-			Message.log(e.getEntity().getDisplayName() + " died at " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
-		}
 	}
 	
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e) {
 		
-		if(!Conf.instance().getBoolean("features.addons.deathSave.keepHealth")) {
+		if(Conf.instance().getBoolean("features.addons.deathSave.keepHealth")) {
 			Bukkit.getScheduler().runTaskLaterAsynchronously(jb.getInstance(), new Runnable() {
 			    @Override
 			    public void run() {
