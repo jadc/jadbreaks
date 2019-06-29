@@ -10,12 +10,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
 
 import io.netty.util.internal.ThreadLocalRandom;
+import me.jadc.jadbreaks.tools.Conf;
 import me.jadc.jadbreaks.tools.TPSFetcher;
 
 public class ServerListManager implements Listener {
 	
 	@EventHandler
 	public void onListRequest(ServerListPingEvent e) {
+		
 		char[] codes = new char[]{'3', '5', '6', '7', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 		ChatColor color = ChatColor.getByChar(codes[ThreadLocalRandom.current().nextInt(0, codes.length)]);
 		String version = Bukkit.getServer().getVersion().substring(Bukkit.getServer().getVersion().lastIndexOf(" ") + 1).replaceFirst(".$", "");
@@ -26,13 +28,20 @@ public class ServerListManager implements Listener {
 		long hr = TimeUnit.MILLISECONDS.toHours(up) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(up));
 		long min = TimeUnit.MILLISECONDS.toMinutes(up) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(up));
 		
+		String desc = (
+				Conf.instance().getBoolean("maintenance") ? 
+				MaintenanceMode.maintenanceMessage 
+				: 
+				ChatColor.DARK_GRAY + "Online for "
+				+ ChatColor.GRAY
+				+ day + " days, " + hr + " hours " + ChatColor.DARK_GRAY + "and " + ChatColor.GRAY + min + " minutes"
+		);
+		
 		e.setMotd(
 				color + 
 				"jad's minecraft server for " + version 
 				+ "             " + TPSFetcher.getTPSFormatted(0) + ChatColor.DARK_GRAY + " TPS\n"
-				+ ChatColor.DARK_GRAY + "Online for "
-				+ ChatColor.GRAY
-				+ day + " days, " + hr + " hours " + ChatColor.DARK_GRAY + "and " + ChatColor.GRAY + min + " minutes"
+				+ desc
 				);
 		e.setMaxPlayers(0);
 	}

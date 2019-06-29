@@ -16,6 +16,7 @@ import me.jadc.jadbreaks.addons.DeathSave;
 import me.jadc.jadbreaks.addons.GodPets;
 import me.jadc.jadbreaks.addons.InstaSleep;
 import me.jadc.jadbreaks.addons.Log;
+import me.jadc.jadbreaks.addons.MaintenanceMode;
 import me.jadc.jadbreaks.addons.ServerListManager;
 import me.jadc.jadbreaks.addons.XPDropAlways;
 import me.jadc.jadbreaks.cmd.BoxOfBlocks;
@@ -58,6 +59,7 @@ public class jb extends JavaPlugin {
 	
 	private void pluginInitialization() {
 		// Event Listeners
+		p.registerEvents(new MaintenanceMode(), this);
 		p.registerEvents(new ServerListManager(), this);
 		p.registerEvents(new Conf(), this);
 		p.registerEvents(new ChangelogNotification(), this);
@@ -79,6 +81,7 @@ public class jb extends JavaPlugin {
 		getCommand("tempban").setExecutor(new TempBan());
 		getCommand("raw").setExecutor(new Raw());
 		getCommand("died").setExecutor(new DeathLocationAid());
+		getCommand("maintenance").setExecutor(new MaintenanceMode());
 		
 		// Perks
 		if(Conf.instance().getBoolean("features.addons.perks")) {

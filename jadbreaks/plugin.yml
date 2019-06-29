@@ -12,6 +12,7 @@ commands:
   raw:
   warp:
   died:
+  maintenance:
 permissions:
   jadbreaks.mod:
     default: op
