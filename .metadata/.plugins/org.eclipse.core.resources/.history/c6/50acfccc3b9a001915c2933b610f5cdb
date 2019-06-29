@@ -28,20 +28,15 @@ public class ServerListManager implements Listener {
 		long hr = TimeUnit.MILLISECONDS.toHours(up) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(up));
 		long min = TimeUnit.MILLISECONDS.toMinutes(up) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(up));
 		
-		String desc = (
-				Conf.instance().getBoolean("maintenance") ? 
-				MaintenanceMode.maintenanceMessage 
-				: 
-				ChatColor.DARK_GRAY + "Online for "
+		String desc = ChatColor.DARK_GRAY + "Online for "
 				+ ChatColor.GRAY
-				+ day + " days, " + hr + " hours " + ChatColor.DARK_GRAY + "and " + ChatColor.GRAY + min + " minutes"
-		);
+				+ day + " days, " + hr + " hours " + ChatColor.DARK_GRAY + "and " + ChatColor.GRAY + min + " minutes";
 		
 		e.setMotd(
 				color + 
 				"jad's minecraft server for " + version 
 				+ "             " + TPSFetcher.getTPSFormatted(0) + ChatColor.DARK_GRAY + " TPS\n"
-				+ desc
+				
 				);
 		e.setMaxPlayers(0);
 	}

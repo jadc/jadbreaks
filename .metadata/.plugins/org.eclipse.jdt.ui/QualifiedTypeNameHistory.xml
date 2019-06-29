@@ -53,11 +53,11 @@
 <fullyQualifiedTypeName name="java.util.concurrent.TimeUnit"/>
 <fullyQualifiedTypeName name="org.bukkit.event.Listener"/>
 <fullyQualifiedTypeName name="org.bukkit.inventory.ItemStack"/>
-<fullyQualifiedTypeName name="org.bukkit.Material"/>
 <fullyQualifiedTypeName name="net.md_5.bungee.api.ChatColor"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="me.jadc.jadbreaks.tools.Compare"/>
 <fullyQualifiedTypeName name="me.jadc.jadbreaks.tools.Message"/>
 <fullyQualifiedTypeName name="org.bukkit.event.block.Action"/>
 <fullyQualifiedTypeName name="org.bukkit.block.Jukebox"/>
+<fullyQualifiedTypeName name="org.bukkit.Material"/>
 </qualifiedTypeNameHistroy>

@@ -1,11 +1,13 @@
 package me.jadc.jadbreaks.addons;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 
+import me.jadc.jadbreaks.jb;
 import me.jadc.jadbreaks.tools.Message;
 
 public class InstaSleep implements Listener {
@@ -28,10 +30,7 @@ public class InstaSleep implements Listener {
 		
 		// Change time of day if not day
 		if(w.getTime() > 12000) {
-			
-			if(w.getTime() > 12000) w.setTime(0);
-			
-			/*// Smooth day transition
+			// Smooth day transition
 			if(sleepTask == 0) {
 				// Announcement
 				Bukkit.broadcastMessage(e.getPlayer().getDisplayName() + " went to sleep");
@@ -48,7 +47,7 @@ public class InstaSleep implements Listener {
 					}
 					
 				}, 0, 100L).getTaskId();
-			}*/
+			}
 		}
 	}
 }

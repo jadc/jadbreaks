@@ -41,7 +41,7 @@ public class ServerListManager implements Listener {
 				color + 
 				"jad's minecraft server for " + version 
 				+ "             " + TPSFetcher.getTPSFormatted(0) + ChatColor.DARK_GRAY + " TPS\n"
-				+ desc
+				
 				);
 		e.setMaxPlayers(0);
 	}

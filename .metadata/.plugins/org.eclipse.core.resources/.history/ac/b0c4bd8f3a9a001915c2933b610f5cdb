@@ -81,7 +81,7 @@ public class jb extends JavaPlugin {
 		getCommand("tempban").setExecutor(new TempBan());
 		getCommand("raw").setExecutor(new Raw());
 		getCommand("died").setExecutor(new DeathLocationAid());
-		getCommand("maintenance").setExecutor(new MaintenanceMode());
+		getCommand("maintenance").setExecutor(new DeathLocationAid());
 		
 		// Perks
 		if(Conf.instance().getBoolean("features.addons.perks")) {
